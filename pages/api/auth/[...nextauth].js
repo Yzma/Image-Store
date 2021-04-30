@@ -14,9 +14,7 @@ const NextAuthProvider = NextAuth({
     }),
   ],
 
-  jwt: {
-    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
-  }
+  adapter: Adapters.Prisma.Adapter({ prisma }),
 })
 
 export default NextAuthProvider
