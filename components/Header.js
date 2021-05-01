@@ -16,7 +16,7 @@ export const Header = (props) => {
         <div className="d-flex justify-content-end w-100">
           <Nav className="align-items-right">
             {!session ? (
-                <Button onClick={() => signIn("github")} variant="outline-dark" className="ms-3">Sign In</Button>
+                <Button onClick={() => signIn()} variant="outline-dark" className="ms-3">Sign In</Button>
               ) : (
               <>
                 <Dropdown as={Nav.Item}>
