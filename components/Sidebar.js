@@ -61,8 +61,10 @@ export const Sidebar = (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Home" icon={faHome} link={'/'}/>
-
               <NavItem title="Search Images" icon={faImages} link={'/images'}/>
+
+              <Dropdown.Divider className="my-3 border-indigo" />
+              
               <NavItem title="Manage Money" icon={faHandHoldingUsd} link={'/managemoney'}/>
 
               <Dropdown.Divider className="my-3 border-indigo" />
