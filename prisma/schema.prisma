@@ -24,18 +24,16 @@ model Image {
 
 model User {
   id            Int       @id @default(autoincrement())
-  name          String?   @unique
+  name          String?
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @default(now()) @map("updated_at")
-
-  money         Decimal   @default(10.0) 
+  money         Decimal   @default(10.0)
 
   images        Image[]
 
-  @@index([name])
   @@map("users")
 }
 
