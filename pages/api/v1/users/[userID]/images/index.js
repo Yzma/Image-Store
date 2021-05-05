@@ -15,10 +15,11 @@ const path = require("path")
 const upload = multer({
 
     storage: multer.diskStorage({
-        destination: function (req, file, cb) {
+        destination: (req, file, cb) => {
             cb(null, Constants.IMAGE_DESTINATION_FOLDER)
         },
-        filename: function (req, file, cb) {
+        
+        filename: (req, file, cb) => {
             const random = cryptoRandomString({length: 10, type: 'url-safe'});
             cb(null, `${random}-${path.extname(newImg.originalname)}`)
         }
