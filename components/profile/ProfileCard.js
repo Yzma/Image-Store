@@ -6,7 +6,7 @@ import DefaultProfilePicture from "../../public/assets/img/team/profile-picture-
 import ProfileCover from "../../public/assets/img/profile-cover.jpg";
 
 export const ProfileCard = (props) => {
-    const { name, image } = props.userInformation;
+    const { name, money, image } = props.userInformation;
   
     return (
       <Card border="light" className="text-center p-0 mb-4">
@@ -14,7 +14,7 @@ export const ProfileCard = (props) => {
         <Card.Body className="pb-5">
           <Card.Img src={image ? image : DefaultProfilePicture} alt="Default Image" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
           <Card.Title>{name}</Card.Title>
-          <Card.Subtitle>$10.00</Card.Subtitle>
+          <Card.Subtitle>{money.toFixed(2)}</Card.Subtitle>
         </Card.Body>
       </Card>
     );

@@ -9,7 +9,10 @@ export const ProfileIndexPage = (props) => {
 
   const testData = {
     name: "Name Here",
+    money: 12.00
   }
+
+  console.log('Profile Props: ', props)
 
   return (
     <PageTemplate>
@@ -19,7 +22,7 @@ export const ProfileIndexPage = (props) => {
             <ProfileCard userInformation={testData} />
           </Col>
           <Col xs={12} xl={8}>
-            <ProfileTabs />
+            <ProfileTabs images={props.images}/>
           </Col>
         </Row>   
       </div>
