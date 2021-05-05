@@ -12,6 +12,7 @@ model Image {
   title        String   
   description  String?
   private      Boolean  @default(false)
+  fileType     String
   dateUploaded DateTime @default(now()) @map("date_uploaded")
   fileName     String
 
