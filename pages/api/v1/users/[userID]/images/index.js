@@ -1,25 +1,22 @@
 
-import prisma from '../../../../../util/prisma'
-import { getUserFromAccessToken } from '../../../../../util/userUtil'
+import prisma from '../../../../../../util/prisma'
+import { getUserFromAccessToken } from '../../../../../../util/userUtil'
 import { getSession } from 'next-auth/client'
 
-import initMiddleware from '../../../../../util/initMiddleware'
+import initMiddleware from '../../../../../../util/initMiddleware'
 
-import { IMAGE_DESTINATION_FOLDER, ACCEPTED_FILE_UPLOAD_MIME_TYPES, MAX_IMAGES_PER_UPLOAD } from '../../../../../util/constants'
+import * as Constants from '../../../../../../util/constants'
 
 import multer from 'multer';
 import cryptoRandomString from 'crypto-random-string';
 
 const path = require("path")
-
-// TODO: Move to constants file and have max upload size
-const oneMegabyteInBytes = 1000000;
   
 const upload = multer({
 
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, IMAGE_DESTINATION_FOLDER)
+            cb(null, Constants.IMAGE_DESTINATION_FOLDER)
         },
         filename: function (req, file, cb) {
             const random = cryptoRandomString({length: 10, type: 'url-safe'});
@@ -28,16 +25,20 @@ const upload = multer({
     }),
 
     fileFilter: (req, file, callback) => {
-        if(ACCEPTED_FILE_UPLOAD_MIME_TYPES.includes(file.mimetype)) {
+        if(Constants.ACCEPTED_FILE_UPLOAD_MIME_TYPES.includes(file.mimetype)) {
             callback(null, true);
         } else {
             return callback(new Error('Only .png, .jpg and .jpeg format allowed!'));
         }
-
     },
+
+    limits: {
+        files: Constants.MAX_IMAGES_PER_UPLOAD,
+        fileSize: Constants.MAX_FILE_SIZE_IN_BYTES, // 1 MB (max file size)
+    }
 })
 
-const multerMiddle = initMiddleware(upload.array('images', MAX_IMAGES_PER_UPLOAD))
+const multerMiddle = initMiddleware(upload.array('images'))
 
 export default async (req, res) => {
 
