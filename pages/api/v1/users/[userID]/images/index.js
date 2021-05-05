@@ -5,13 +5,14 @@ import { getSession } from 'next-auth/client'
 
 import initMiddleware from '../../../../../util/initMiddleware'
 
-import { IMAGE_DESTINATION_FOLDER, ACCEPTED_FILE_UPLOAD_MIME_TYPES } from '../../../../../util/constants'
+import { IMAGE_DESTINATION_FOLDER, ACCEPTED_FILE_UPLOAD_MIME_TYPES, MAX_IMAGES_PER_UPLOAD } from '../../../../../util/constants'
 
 import multer from 'multer';
 import cryptoRandomString from 'crypto-random-string';
 
 const path = require("path")
 
+// TODO: Move to constants file and have max upload size
 const oneMegabyteInBytes = 1000000;
   
 const upload = multer({
@@ -36,7 +37,7 @@ const upload = multer({
     },
 })
 
-const multerMiddle = initMiddleware(upload.array('images', 12))
+const multerMiddle = initMiddleware(upload.array('images', MAX_IMAGES_PER_UPLOAD))
 
 export default async (req, res) => {
 
@@ -110,7 +111,7 @@ export default async (req, res) => {
             console.error("Exception: ", e)
             return res.status(400).json({error: "something went wrong"})
         }
-        
+
     } else {
         res.status(500).json({ error: `${req.method} is not supported` })
     }
