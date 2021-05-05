@@ -11,7 +11,9 @@ model Image {
   id           Int      @id @default(autoincrement())
   title        String   
   description  String?
+  private      Boolean  @default(false)
   dateUploaded DateTime @default(now()) @map("date_uploaded")
+  fileName     String
 
   userID       Int      @map("user_id")
   user         User     @relation(fields: [userID], references: [id])
