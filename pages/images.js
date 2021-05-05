@@ -4,10 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, InputGroup, Card, Image } from '@themesberg/react-bootstrap';
 
+import { ImageDisplayGrid } from '../components/images/ImageDisplayGrid'
+
 // Public image searching
 const PublicImageSearch = () => {
 
-  const imageObjects = [
+  const images = [
     {
       title: "Image title",
       description: "This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.",
@@ -33,23 +35,6 @@ const PublicImageSearch = () => {
     }
   ]
 
-  const DisplayImage = (props) => {
-
-    const { title, description, imageURL } = props.imageObject
-
-    return (
-      <Col>
-        <Card className="h-100">
-          <a href="/"><Image src={imageURL} className="card-img-top" /></a>
-          <Card.Body>
-            <Card.Title>{title}</Card.Title>
-            <Card.Text>{description}</Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    )
-  }
-
   return (
     <PageTemplate>
 
@@ -71,9 +56,7 @@ const PublicImageSearch = () => {
         </Col>
       </Row>
 
-      <div className="row row-cols-1 row-cols-md-4 g-4">
-        {imageObjects.map((imageObject, index) => <DisplayImage key={index} imageObject={imageObject} />)}
-      </div>
+      <ImageDisplayGrid images={images}/>
 
     </PageTemplate>
   );
