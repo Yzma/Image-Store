@@ -14,6 +14,7 @@ export const ProfileCard = (props) => {
         <Card.Body className="pb-5">
           <Card.Img src={image ? image : DefaultProfilePicture} alt="Default Image" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
           <Card.Title>{name}</Card.Title>
+          <Card.Subtitle>$10.00</Card.Subtitle>
         </Card.Body>
       </Card>
     );
