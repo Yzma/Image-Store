@@ -1,10 +1,10 @@
 import React from 'react';
-import { PageTemplate } from '../components/PageTemplate'
+import { PageTemplate } from '../../components/PageTemplate'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, InputGroup, Card, Image } from '@themesberg/react-bootstrap';
 
-import { ImageDisplayGrid } from '../components/images/ImageDisplayGrid'
+import { ImageDisplayGrid } from '../../components/images/ImageDisplayGrid'
 
 // Public image searching
 const PublicImageSearch = () => {
