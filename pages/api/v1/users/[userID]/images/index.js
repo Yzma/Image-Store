@@ -18,10 +18,10 @@ const upload = multer({
         destination: (req, file, cb) => {
             cb(null, Constants.IMAGE_DESTINATION_FOLDER)
         },
-        
+
         filename: (req, file, cb) => {
             const random = cryptoRandomString({length: 10, type: 'url-safe'});
-            cb(null, `${random}-${path.extname(newImg.originalname)}`)
+            cb(null, `${random}-${path.extname(file.originalname)}`)
         }
     }),
 
