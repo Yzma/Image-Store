@@ -1,6 +1,7 @@
 
 import prisma from '../../../../../util/prisma'
 import { getSession } from 'next-auth/client'
+import { getUser } from '../../../../../util/database/userUtil'
 
 export default async (req, res) => {
 
@@ -11,19 +12,7 @@ export default async (req, res) => {
     */
     if (req.method === "GET") {
         
-        const foundUser = await prisma.user.findFirst({
-            where: {
-                id: parseInt(userID)
-            },
-
-            select: {
-                id: true,
-                name: true,
-                image: true,
-                createdAt: true,
-                money: true
-            }
-        })
+        const foundUser = await getUser(userID)
 
         if(!foundUser) {
             return res.status(404).json({ error: `Not found` })
@@ -32,6 +21,6 @@ export default async (req, res) => {
         return res.status(200).json(foundUser)
 
     } else {
-        res.status(500).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: `${req.method} is not supported` })
     }
 }
