@@ -19,6 +19,7 @@ model Image {
   userID       Int      @map("user_id")
   user         User     @relation(fields: [userID], references: [id])
 
+  @@unique([id, userID])
   @@index([title, description, userID])
   @@map("images")
 }
