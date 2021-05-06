@@ -1,6 +1,6 @@
 
 import prisma from '../../../../../../util/prisma'
-import { getUserFromAccessToken } from '../../../../../../util/userUtil'
+import { getUserFromAccessToken } from '../../../../../../util/database/userUtil'
 import { getSession } from 'next-auth/client'
 
 import initMiddleware from '../../../../../../util/initMiddleware'
