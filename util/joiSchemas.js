@@ -22,3 +22,9 @@ export const imageSchema = Joi.object({
             update: (schema) => schema.optional(),
         }),
 });
+
+export const userBalanceSchema = Joi.object({
+    balance: Joi.number()
+        .greater(0)
+        .less(1000)
+});
