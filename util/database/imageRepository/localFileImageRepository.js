@@ -7,39 +7,56 @@
 */
 
 import prisma from '../../prisma'
+import { MAX_IMAGES_PER_PAGE } from '../../constants'
 
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-export async function getImage(userID, imageID) {
+export function getImage(userID, imageID) {
 
-    const requestedImage = await prisma.user.findFirst({
+    const requestedImage = prisma.image.findFirst({
         where: {
-            id: parseInt(userID),
-
+            id: parseInt(imageID),
+            user: {
+                id: parseInt(userID)
+            }
         },
 
         select: {
-            images: {
-                where: {
-                    id: parseInt(imageID)
-                },
-
-                select: {
-                    title: true,
-                    description: true,
-                    private: true,
-                    fileType: true,
-                    dateUploaded: true,
-                    fileName: true
-                }
-            }
+            title: true,
+            description: true,
+            private: true,
+            fileType: true,
+            dateUploaded: true,
+            fileName: true,
+            userID: true
         }
     })
 
     return requestedImage
 }
 
+export function getImageById(imageID) {
+
+    const requestedImage = prisma.image.findFirst({
+        where: {
+            id: parseInt(imageID),
+        },
+
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            private: true,
+            fileType: true,
+            dateUploaded: true,
+            fileName: true,
+            userID: true
+        }
+    })
+
+    return requestedImage
+}
 export async function getImages(userID) {
 
     const userImages = await prisma.image.findMany({
@@ -51,7 +68,21 @@ export async function getImages(userID) {
     })
 
     return userImages
-} 
+}
+
+//https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing 
+// TODO: Return 15 maximum images, and also return total private images
+export function getPublicImages(currentPage = 0) {
+    const publicImages = prisma.image.findMany({
+        take: MAX_IMAGES_PER_PAGE,
+        skip: currentPage * MAX_IMAGES_PER_PAGE,
+        where: {
+            private: false
+        },
+    })
+
+    return publicImages
+}
 
 export async function getImageOnDisk(filePath) {
 
