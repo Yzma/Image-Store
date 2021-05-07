@@ -65,7 +65,7 @@ export const Sidebar = (props = {}) => {
 
               <Dropdown.Divider className="my-3 border-indigo" />
               
-              <NavItem title="Manage Money" icon={faHandHoldingUsd} link={'/managemoney'}/>
+              <NavItem title="Manage Balance" icon={faHandHoldingUsd} link={'/managebalance'}/>
 
               <Dropdown.Divider className="my-3 border-indigo" />
 
