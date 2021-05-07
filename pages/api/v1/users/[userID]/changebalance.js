@@ -25,6 +25,10 @@ export default async (req, res) => {
 
             data: {
                 balance: balance 
+            },
+
+            select: {
+                balance: true
             }
         })
 
