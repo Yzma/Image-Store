@@ -3,43 +3,7 @@ import prisma from '../../../../../../util/prisma'
 import { getUserFromAccessToken } from '../../../../../../util/database/userUtil'
 import { getSession } from 'next-auth/client'
 
-import initMiddleware from '../../../../../../util/initMiddleware'
-
-import * as Constants from '../../../../../../util/constants'
-
-import multer from 'multer';
-import cryptoRandomString from 'crypto-random-string';
-
-const path = require("path")
-  
-const upload = multer({
-
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, Constants.IMAGE_DESTINATION_FOLDER)
-        },
-
-        filename: (req, file, cb) => {
-            const random = cryptoRandomString({length: 10, type: 'url-safe'});
-            cb(null, `${random}-${path.extname(file.originalname)}`)
-        }
-    }),
-
-    fileFilter: (req, file, callback) => {
-        if(Constants.ACCEPTED_FILE_UPLOAD_MIME_TYPES.includes(file.mimetype)) {
-            callback(null, true);
-        } else {
-            return callback(new Error('Only .png, .jpg and .jpeg format allowed!'));
-        }
-    },
-
-    limits: {
-        files: Constants.MAX_IMAGES_PER_UPLOAD,
-        fileSize: Constants.MAX_FILE_SIZE_IN_BYTES, // 1 MB (max file size)
-    }
-})
-
-const multerMiddle = initMiddleware(upload.array('images'))
+import { MulterMiddleware } from '../../../../../../util/middleware/multer'
 
 export default async (req, res) => {
 
@@ -82,40 +46,83 @@ export default async (req, res) => {
         try {
 
             // TODO: Error handling - What if all files aren't uploaded or something in the database fails?
-            await multerMiddle(req, res)
+            return await MulterMiddleware(req, res).then(async (value) => {
 
-            const transactions = []
-            for(const newImg of req.files) {
-
-                console.log(path.extname(newImg.originalname))
-                console.log('NewImg: ', newImg)
-                const result = prisma.image.create({
-                    data: {
-                        title: newImg.originalname,
-                        fileName: newImg.filename,
-                        fileType: newImg.mimetype,
-                        user: {
-                            connect: {
-                                id: 1
+                const transactions = []
+                for(const newImg of req.files) {
+    
+                    // console.log(path.extname(newImg.originalname))
+                    // console.log('NewImg: ', newImg)
+                    const result = prisma.image.create({
+                        data: {
+                            title: newImg.originalname,
+                            fileName: newImg.filename,
+                            fileType: newImg.mimetype,
+                            user: {
+                                connect: {
+                                    id: 1
+                                }
                             }
                         }
-                    }
-                })
+                    })
+    
+                    transactions.push(result)
+                }
+    
+                await prisma.$transaction(transactions) // Operations succeed or fail together
 
-                transactions.push(result)
-            }
+                return res.status(200).json({success: "Made it here!"})
 
-            await prisma.$transaction(transactions) // Operations succeed or fail together
+            }).catch((error) => {
+                console.log(error)
+                return res.status(400).json({error: 'Error uploading files'})
+            })
 
-            return res.status(200).json({success: "Made it here!"})
-
+          
         } catch(e) {
             console.error("Exception: ", e)
-            return res.status(400).json({error: "something went wrong"})
+            return res.status(500).json({error: "Internal server error"})
         }
 
+        // TODO: Move this into another route? We need bodyParser to be enabled but disabled for the POST route
+    // DELETE request to delete multiple images
+    // } else if(req.method === "DELETE") {
+
+    //     const { ids } = req.body
+    //     console.log(ids)
+
+    //     try {
+    //         // id: { in: ids },
+
+    //         const deletedImageResult = await prisma.user.update({
+    //             where: {
+    //                 id: parseInt(userID)
+    //             },
+
+    //             data: {
+    //                 images: {
+    //                     deleteMany: {
+    //                         id: { in: ids }
+    //                     }
+    //                 }
+    //             }
+    //         })
+
+    //         // const deletedImageResult = await prisma.image.deleteMany({
+    //         //     where: {
+    //         //         id: { in: ids },
+    //         //     }
+    //         // })
+
+    //         return res.status(200).json(deletedImageResult)
+
+    //     } catch(e) {
+    //         console.error("Exception: ", e)
+    //         return res.status(400).json({error: "something went wrong"})
+    //     }
+
     } else {
-        res.status(500).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: `${req.method} is not supported` })
     }
 }
 
