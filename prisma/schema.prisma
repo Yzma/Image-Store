@@ -34,7 +34,7 @@ model User {
   image         String?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @default(now()) @map("updated_at")
-  money         Decimal   @default(10.0)
+  balance       Decimal   @default(10.0)
 
   images        Image[]
 
