@@ -5,7 +5,10 @@ import { getSession } from 'next-auth/client'
 import { imageSchema } from '../../../../../../util/joiSchemas'
 import { IMAGE_DESTINATION_FOLDER } from '../../../../../../util/constants'
 
-const path = require('fs')
+import { getImage, updateImage } from '../../../../../../util/database/imageRepository/localFileImageRepository'
+
+const path = require('path')
+const fs = require('fs')
 
 export default async (req, res) => {
 
@@ -15,46 +18,53 @@ export default async (req, res) => {
     // Get Image by ID
     if(req.method === "GET") {
 
-        const requestedImage = await prisma.image.findFirst({
-            where: {
-                id: parseInt(imageID)
-            },
+        try {
+            const requestedImage = await getImage(userID, imageID)
 
-            select: {
-                title: true,
-                description: true,
-                private: true,
-                fileType: true,
-                dateUploaded: true,
-                fileName: true
+            if(!requestedImage) {
+                return res.status(404).send({error: "Resource not found"})
             }
-        })
 
-        return res.status(200).json(requestedImage)
+            if(!req.url.endsWith(".png")) {
+                return res.status(200).send(requestedImage)
+            } else {
+                const data = fs.readFileSync(`${IMAGE_DESTINATION_FOLDER}/${requestedImage.fileName}`)
+                res.setHeader('Content-Type', 'image/jpg');
+                return res.status(200).send(data)
+            }
+
+        } catch (error) {
+            console.error(error)
+            return res.status(500).json({error: 'Internal Server Error'})
+        }
 
     // PATCH request for updating image information
     } else if(req.method === "PATCH") {
  
-        const { title, description } = req.body
+        const { title, description, private: isPrivate } = req.body
 
-        const { error } = imageSchema.tailor("update").validate({ title: title, description: description })
-        if(error) {
-            return res.status(404).json({error: "Invalid data"})
+        try {
+
+            const { error } = imageSchema.tailor("update").validate({ title: title, description: description, private: isPrivate })
+            if(error) {
+                return res.status(400).json({error: "Invalid data"})
+            }
+
+            const updatedImage = await updateImage(userID, imageID, { title, description, private: isPrivate })
+
+            return res.status(200).json(updatedImage)
+            
+        } catch(err) {
+
+            // Record to update not found.
+            if(err.code == 'P2025') {
+                return res.status(404).send({error: "Resource not found"})
+            }
+
+            console.error(err)
+            return res.status(500).json({error: 'Internal Server Error'})
         }
 
-        const updatedImage = await prisma.image.update({
-            where: {
-                id: parseInt(imageID),
-                //userID: userID
-            },
-
-            data: {
-                title: title,
-                description: description
-            }
-        })
-
-        return res.status(200).json(updatedImage)
 
     // DELETE image by ID - TODO: Figure out how to return API code for this
     } else if(req.method === "DELETE") {
@@ -79,13 +89,19 @@ export default async (req, res) => {
                 return res.status(200).json(deletedImageResult)
               })
 
-        } catch(e) {
-            console.error(e)
-            return res.status(400).json({error: 'Internal server error'})
+        } catch(error) {
+
+            // Record to update not found.
+            if(error.code == 'P2025') {
+                return res.status(404).send({error: "Resource not found"})
+            }
+
+            console.error(error)
+            return res.status(500).json({error: 'Internal server error'})
         }
 
     } else {
-        res.status(500).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: `${req.method} is not supported` })
     }
 }
 
