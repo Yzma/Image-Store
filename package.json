@@ -30,7 +30,8 @@
     "react-transition-group": "^4.4.1",
     "sass": "^1.32.11",
     "simplebar-react": "^2.3.2",
-    "superjson": "^1.7.4"
+    "superjson": "^1.7.4",
+    "yup": "^0.32.9"
   },
   "engines": {
     "node": "14.x"
