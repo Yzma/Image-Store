@@ -33,12 +33,12 @@ const ManageBalance = (props) => {
       })
         .then(response => response.json())
         .then(data => {
-          console.log('Success:', data);
+          console.debug('Success:', data);
           balanceView.current = parseInt(data.balance)
           setShowSuccessAlert(true)
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.debug('Error:', error);
           setShowErrorAlert(true)
         })
   })
