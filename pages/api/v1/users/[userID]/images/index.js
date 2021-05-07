@@ -50,9 +50,7 @@ export default async (req, res) => {
 
                 const transactions = []
                 for(const newImg of req.files) {
-    
-                    // console.log(path.extname(newImg.originalname))
-                    // console.log('NewImg: ', newImg)
+
                     const result = prisma.image.create({
                         data: {
                             title: newImg.originalname,
@@ -83,43 +81,6 @@ export default async (req, res) => {
             console.error("Exception: ", e)
             return res.status(500).json({error: "Internal server error"})
         }
-
-        // TODO: Move this into another route? We need bodyParser to be enabled but disabled for the POST route
-    // DELETE request to delete multiple images
-    // } else if(req.method === "DELETE") {
-
-    //     const { ids } = req.body
-    //     console.log(ids)
-
-    //     try {
-    //         // id: { in: ids },
-
-    //         const deletedImageResult = await prisma.user.update({
-    //             where: {
-    //                 id: parseInt(userID)
-    //             },
-
-    //             data: {
-    //                 images: {
-    //                     deleteMany: {
-    //                         id: { in: ids }
-    //                     }
-    //                 }
-    //             }
-    //         })
-
-    //         // const deletedImageResult = await prisma.image.deleteMany({
-    //         //     where: {
-    //         //         id: { in: ids },
-    //         //     }
-    //         // })
-
-    //         return res.status(200).json(deletedImageResult)
-
-    //     } catch(e) {
-    //         console.error("Exception: ", e)
-    //         return res.status(400).json({error: "something went wrong"})
-    //     }
 
     } else {
         res.status(404).json({ error: `${req.method} is not supported` })
