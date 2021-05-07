@@ -1,5 +1,7 @@
 import prisma from "../prisma"
 
+import { getSession } from 'next-auth/client'
+
 export function getUser(userID) {
     return prisma.user.findFirst({
         where: {
@@ -10,9 +12,18 @@ export function getUser(userID) {
             name: true,
             image: true,
             createdAt: true,
-            money: true
+            balance: true
         }
     })
+}
+
+export async function getUserBySession(session) {
+    const userSession = await getSession(session)
+    const userID = await getUserFromAccessToken(userSession?.accessToken)
+    const user = await getUser(userID)
+
+    console.log(user)
+    return user
 }
 
 export const getUserFromAccessToken = async (accessToken) => {
