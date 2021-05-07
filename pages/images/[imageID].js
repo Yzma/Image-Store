@@ -1,7 +1,11 @@
 
 import React from 'react';
 import { PageTemplate } from '../../components/PageTemplate'
-import { Col, Row, Form, Container, Button, Dropdown, Nav, Image, Card } from '@themesberg/react-bootstrap';
+import { Col, Row, Container, Card } from '@themesberg/react-bootstrap';
+
+import { CannotViewImageError } from '../../components/CannotViewImageError';
+import { getImageById } from '../../util/database/imageRepository/localFileImageRepository'
+import { ErrorCode } from '../../util/constants';
 
 const ViewImage = (props) => {
 
@@ -9,65 +13,105 @@ const ViewImage = (props) => {
         <PageTemplate>
             <article>
                 <Container className="px-0">
-                    <Row>
 
-                        <Col >
-                            <Card>
-                                <Card.Img variant="top" src="https://mdbootstrap.com/img/new/standard/city/041.jpg" />
-                            </Card>
-                        </Col>
+                    {props.error ?
+                    
+                        <CannotViewImageError error={props.error} />
 
-                        <Col className="d-flex justify-content-end">
-                            <Card style={{ width: '25rem' }}>
-                                <Card.Body>
-                                    <Card.Title>Title</Card.Title>
-                                    <Card.Text>
-                                        Title of Image
-                                    </Card.Text>
+                        :
 
-                                    <div className="pb-2"></div>
+                        <Row>
+                            <Col >
+                                <Card>
+                                    <Card.Img variant="top" src="https://mdbootstrap.com/img/new/standard/city/041.jpg" />
+                                </Card>
+                            </Col>
 
-                                    <Card.Title>Description</Card.Title>
-                                    <Card.Text>
-                                        Description here
-                                    </Card.Text>
+                            <Col className="d-flex justify-content-end">
+                                <Card style={{ width: '25rem' }}>
+                                    <Card.Body>
+                                        <Card.Title>Title</Card.Title>
+                                        <Card.Text>
+                                            {props.requestedImage.title}
+                                        </Card.Text>
 
-                                    <div className="pb-2"></div>
+                                        <div className="pb-2"></div>
 
-                                    <Card.Title>Private</Card.Title>
-                                    <Card.Text>
-                                        Yes
-                                    </Card.Text>
+                                        <Card.Title>Description</Card.Title>
+                                        <Card.Text>
+                                            {props.requestedImage.description}
+                                        </Card.Text>
 
-                                    <div className="pb-2"></div>
+                                        <div className="pb-2"></div>
 
-                                    <Card.Title>Date Uploaded</Card.Title>
-                                    <Card.Text>
-                                        May 6th, 2021 at 5:30pm
-                                    </Card.Text>
+                                        <Card.Title>Private</Card.Title>
+                                        <Card.Text>
+                                            {props.requestedImage.private ? "Yes" : "No"}
+                                        </Card.Text>
 
-                                    <div className="pb-2"></div>
+                                        <div className="pb-2"></div>
 
-                                    <Card.Title>Owner User ID</Card.Title>
-                                    <Card.Text>
-                                        <Card.Link href={`/users/1`}>1</Card.Link>
-                                    </Card.Text>
+                                        <Card.Title>Date Uploaded</Card.Title>
+                                        <Card.Text>
+                                            {props.requestedImage.dateUploaded.toLocaleDateString()}
 
-                                    <div className="pb-2"></div>
+                                        </Card.Text>
 
-                                    <Card.Title>File Type</Card.Title>
-                                    <Card.Text>
-                                        png
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
+                                        <div className="pb-2"></div>
 
-                        </Col>
-                    </Row>
+                                        <Card.Title>Owner User ID</Card.Title>
+                                        <Card.Text>
+                                            <Card.Link href={`/users/${props.requestedImage.userID}`}>{props.requestedImage.userID}</Card.Link>
+                                        </Card.Text>
+
+                                        <div className="pb-2"></div>
+
+                                        <Card.Title>File Type</Card.Title>
+                                        <Card.Text>
+                                            {props.requestedImage.fileType}
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    }
+
                 </Container>
             </article>
         </PageTemplate>
     );
 };
+
+export async function getServerSideProps(context) {
+
+    const requestedImage = await getImageById(context.params.imageID)
+
+    if (!requestedImage) {
+        return {
+            props: {
+                error: {
+                    code: ErrorCode.NOT_FOUND
+                }
+            }
+        }
+    }
+
+    // Check permissions
+    if (false) {
+        return {
+            props: {
+                error: {
+                    code: ErrorCode.NO_AUTHORIZATION
+                }
+            }
+        }
+    }
+
+    return {
+        props: {
+            requestedImage: requestedImage
+        }
+    }
+}
 
 export default ViewImage
