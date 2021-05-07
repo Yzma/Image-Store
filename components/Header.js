@@ -39,7 +39,7 @@ export const Header = (props) => {
                         Your Images
                       </Dropdown.Item>
                       <Dropdown.Item className="fw-bold">
-                        Your Money
+                        Your Balance
                       </Dropdown.Item>
                     <Dropdown.Divider />
 
