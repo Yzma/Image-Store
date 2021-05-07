@@ -21,6 +21,12 @@ export const imageSchema = Joi.object({
             create: (schema) => schema.optional(),
             update: (schema) => schema.optional(),
         }),
+
+    private: Joi.boolean()
+        .alter({
+            create: (schema) => schema.optional(),
+            update: (schema) => schema.optional(),
+        }),
 });
 
 export const userBalanceSchema = Joi.object({
