@@ -98,7 +98,7 @@ export async function deleteImages(userID, images) {
 
 export async function updateImage(userID, imageID, updatedSettings) {
 
-    const { title, description } = updatedSettings
+    const { title, description, private: isPrivate } = updatedSettings
 
     const updatedImage = await prisma.image.update({
         where: {
@@ -111,6 +111,7 @@ export async function updateImage(userID, imageID, updatedSettings) {
         data: {
             title: title,
             description: description,
+            private: isPrivate
         }
     })
 
