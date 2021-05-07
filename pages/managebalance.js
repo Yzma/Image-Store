@@ -5,7 +5,7 @@ import { Col, Row, Form, Container, Button, Alert } from '@themesberg/react-boot
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import prisma from '../util/prisma';
+import { getUserBySession } from '../util/database/userUtil';
 
 const ManageBalance = (props) => {
 
@@ -51,7 +51,8 @@ const ManageBalance = (props) => {
             <Col className="d-block mb-4 mb-md-0">
               <h1 className="h2">Manage Balance</h1>
               <p className="mb-0">
-                This page is used to edit your balance to test buying images.
+                This page is used to edit your balance to test buying images. The page makes a <kbd>PATCH</kbd> request to the <kbd>/api/changebalance</kbd> route to update the users balance.
+                There is not auth checks in this route as it's only purpose is to edit the users balance to purchase images.
               </p>
             </Col>
           </Row>
@@ -61,7 +62,7 @@ const ManageBalance = (props) => {
           <Alert show={showSuccessAlert} variant="success" onClose={() => setShowSuccessAlert(false)} dismissible>
             <Alert.Heading>Success!</Alert.Heading>
             <p>
-              Your balance has been updated to {balanceView.current.toFixed(2)}
+              Your balance has been updated to ${balanceView.current}
             </p>
           </Alert>
 
@@ -74,7 +75,7 @@ const ManageBalance = (props) => {
 
           <h5>Your Current Balance</h5>
           <p className="mb-0">
-            ${balanceView.current.toFixed(2)}
+            ${balanceView.current}
           </p>
 
           <Form onSubmit={formik.handleSubmit} className="py-3">
@@ -99,23 +100,24 @@ const ManageBalance = (props) => {
   );
 };
 
+// TODO: Come back to this:
+//   - Figure out decimal serialization
+//   - Fetch data more efficiently
+//   - Handle user visiting page not signed in - Right now it only assumes the user is signed in
 export async function getServerSideProps(context) {
 
-  const userBalance = await prisma.user.findFirst({
-    where: {
-      id: 1
-    },
+  const user = await getUserBySession(context)
 
-    select: {
-      balance: true
+  if(!user) {
+    return {
+      props: {
+      }
     }
-  })
-
-  console.log(userBalance)
-
+  }
+ 
   return {
     props: {
-      balance: 150
+      balance: JSON.parse(JSON.stringify(user.balance)) 
     }
   }
 }
