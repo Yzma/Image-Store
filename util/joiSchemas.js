@@ -34,3 +34,14 @@ export const userBalanceSchema = Joi.object({
         .greater(0)
         .less(1000)
 });
+
+// const schema = Joi.array().max(10);
+// const schema = Joi.array().items(Joi.string().valid('not allowed').forbidden(), Joi.string()); 
+// array may contain strings, but none of those strings can match 'not allowed'
+
+export const imageDeleteSchema = Joi.object({
+    ids: Joi.array()
+        .max(10)
+        .items(Joi.number().integer().greater(0))
+        .required()
+});
