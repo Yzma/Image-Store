@@ -25,7 +25,7 @@ const upload = multer({
         if(Constants.ACCEPTED_FILE_UPLOAD_MIME_TYPES.includes(file.mimetype)) {
             callback(null, true);
         } else {
-            return callback(new Error('Only .png, .jpg and .jpeg format allowed!'));
+            return callback(new InvalidFileTypeError('Only .png, .jpg and .jpeg format allowed!'));
         }
     },
 
@@ -34,5 +34,19 @@ const upload = multer({
         fileSize: Constants.MAX_FILE_SIZE_IN_BYTES, // 1 MB (max file size)
     }
 })
+
+export class InvalidFileTypeError extends Error {
+    constructor(params) {
+        // Pass remaining arguments (including vendor specific ones) to parent constructor
+        super(params)
+
+        // Maintains proper stack trace for where our error was thrown (only available on V8)
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, InvalidFileTypeError)
+        }
+
+        this.name = 'InvalidFileTypeError'
+    }
+}
 
 export const MulterMiddleware = initMiddleware(upload.array('images'))
