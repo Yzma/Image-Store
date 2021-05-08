@@ -44,7 +44,7 @@ export function getAuthenticatedUserFromRequest(req) {
                 throw new InvalidUserError(RESPONSE_ERRORS.USER_NOT_FOUND)
             }
 
-            const { userID: id } = userID
+            const { userId: id } = userID
 
             return prisma.user.findFirst({
                 where: {
