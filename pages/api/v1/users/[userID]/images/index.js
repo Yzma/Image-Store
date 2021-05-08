@@ -1,7 +1,9 @@
 
 import prisma from '../../../../../../util/prisma'
-import { getUserFromAccessToken, getUserByReq } from '../../../../../../util/database/userUtil'
+import { getUserFromAccessToken, getUserByReq, getImages } from '../../../../../../util/database/userUtil'
 import { getSession } from 'next-auth/client'
+
+import * as ResponseConstants from '../../../../../../util/constants/response_constants'
 
 import { MulterMiddleware, InvalidFileTypeError } from '../../../../../../util/middleware/multer'
 import multer from 'multer';
@@ -13,35 +15,33 @@ export default async (req, res) => {
 
     if (req.method === "GET") {
 
-        const session = await getSession({ req })
-        const sessionUserID = await getUserFromAccessToken(session?.accessToken)
+        // TODO: Check privacy
+        //     {
+        //         where: {
+        //             user: {
+        //                 id: parseInt(userID)
+        //             }
+        //         }
+        //     }
 
-        const query = sessionUserID ?
+        //     :
 
-            {
-                where: {
-                    user: {
-                        id: parseInt(userID)
-                    }
-                }
-            }
+        //     {
+        //         where: {
+        //             user: {
+        //                 id: parseInt(userID)
+        //             },
+        //             private: false
+        //         }
+        //     }
+        return await getImages(userID)
+            .then((data) => res.status(200).json(data))
+            .catch((error) => {
+                console.error(error)
+                return res.status(500).json(ResponseConstants.INTERNAL_SERVER_ERROR)
+            })
 
-            :
-
-            {
-                where: {
-                    user: {
-                        id: parseInt(userID)
-                    },
-                    private: false
-                }
-            }
-
-        const userImages = await prisma.image.findMany(query)
-
-        return res.status(200).json(userImages)
-
-        // POST request to upload image
+    // POST request to upload image
     } else if (req.method === "POST") {
 
         // TODO: Check permissions
@@ -57,6 +57,7 @@ export default async (req, res) => {
                 return reject(null)
             }
 
+            // Check if the user is who it claims to be
             if (user.id != parseInt(userID)) {
                 return reject(null)
             }

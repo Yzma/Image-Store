@@ -58,7 +58,7 @@ export function getImageById(imageID) {
 
     return requestedImage
 }
-export async function getImages(userID) {
+export function getImages(userID) {
 
     return prisma.image.findMany({
         where: {
