@@ -35,28 +35,17 @@ export default async (req, res) => {
  
         const { title, description, private: isPrivate } = req.body
 
-        try {
-
-            const { error } = imageSchema.tailor("update").validate({ title: title, description: description, private: isPrivate })
-            if(error) {
-                return res.status(400).json({error: "Invalid data"})
-            }
-
-            const updatedImage = await updateImage(userID, imageID, { title, description, private: isPrivate })
-
-            return res.status(200).json(updatedImage)
-            
-        } catch(err) {
-
-            // Record to update not found.
-            if(err.code == 'P2025') {
-                return res.status(404).send({error: "Resource not found"})
-            }
-
-            console.error(err)
-            return res.status(500).json({error: 'Internal Server Error'})
-        }
-
+        return await imageSchema.validateAsync({ title: title, description: description, private: isPrivate })
+            .then(() => updateImage(userID, imageID,  { title, description, private: isPrivate }))
+            .then((data) => res.status(200).json(data))
+            .catch((error) => {
+                if(error.code == 'P2025') {
+                     return res.status(404).send({error: "Resource not found"})
+                }
+                
+                console.error(err)
+                return res.status(500).json({error: 'Internal Server Error'})
+            })
 
     // DELETE image by ID - TODO: Figure out how to return API code for this
     } else if(req.method === "DELETE") {
