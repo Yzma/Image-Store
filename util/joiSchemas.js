@@ -45,3 +45,7 @@ export const imageDeleteSchema = Joi.object({
         .items(Joi.number().integer().greater(0))
         .required()
 });
+
+export const transactionModeSchema = Joi.object({
+    option: Joi.string().valid('bought', 'sold').required()
+});
