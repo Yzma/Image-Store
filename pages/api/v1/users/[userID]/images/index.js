@@ -106,19 +106,17 @@ export default async (req, res) => {
                 // The error handling here is a little weird due to how Multer does it's error handling.
                 // This catches all the errors that are most likely to happen, and returns a 500 if it's a different error.
                 if (error instanceof MulterError) {
-                    console.log(error)
                     if (error.code == 4) {
                         return res.status(400).json({ error: 'Files are too large' })
                     } else if (error.code == 5) {
                         return res.status(400).json({ error: 'Too many files' })
                     }
-                } else if (error instanceof InvalidFileTypeError && error.name === "InvalidFileTypeError") {
+                } else if (error instanceof InvalidFileTypeError) {
                     return res.status(400).json({ error: 'Invalid file types' })
                 } else if(error instanceof InvalidUserError) {
                     return res.status(400).json({error: error.errorDescription})
                 }
 
-                // Unhandled - something else failed somewhere
                 console.error(error)
                 return res.status(500).json({ error: 'Error uploading files' })
             })
