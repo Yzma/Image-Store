@@ -3,7 +3,7 @@ import { imageSchema } from '../../../../../../util/joiSchemas'
 
 import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
 import { getImage, updateImage, deleteImage } from '../../../../../../util/database/imageRepository/localFileImageRepository'
-import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, NOT_FOUND, INVALID_DATA } from '../../../../../../util/constants/response_constants'
+import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, NOT_FOUND, INVALID_DATA, NO_AUTHORIZATION} from '../../../../../../util/constants/response_constants'
 
 import { ValidationError } from 'joi'
 import { InvalidUserError } from '../../../../../../util/errors'
@@ -38,7 +38,7 @@ export default async (req, res) => {
             // TODO: Make this prettier
             .then((data) => {
                 if(data.id !== userID) {
-                    throw new InvalidUserError('No permission')
+                    throw new InvalidUserError(NO_AUTHORIZATION)
                 }
 
                 return data
@@ -63,11 +63,22 @@ export default async (req, res) => {
     // DELETE image by ID - TODO: Figure out how to return API code for this
     } else if(req.method === "DELETE") {
 
-        // TODO: Actually delete files on disk
-        return await deleteImage(userID, imageID)
+        return await getAuthenticatedUserFromRequest(req)
+
+            // TODO: Make this prettier
+            .then((data) => {
+                if(data.id !== userID) {
+                    throw new InvalidUserError(NO_AUTHORIZATION)
+                }
+
+                return data
+            })
+            .then(() => deleteImage(userID, imageID))
             .then((data) => res.status(200).json(data))
             .catch((error) => {
-                if (error.code == 'P2025') {
+                if(error instanceof InvalidUserError) {
+                    return res.status(400).json({error: error.errorDescription})
+                } else if (error.code == 'P2025') {
                     return res.status(404).send({ error: NOT_FOUND })
                 }
                 console.error(error)
