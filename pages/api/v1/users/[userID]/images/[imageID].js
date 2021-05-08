@@ -15,14 +15,36 @@ export default async (req, res) => {
     // Get Image by ID
     if(req.method === "GET") {
 
-        // TODO: Validate image and user ID
         return await getImage(userID, imageID)
             .then((data) => {
                 if (!data)
-                    return res.status(404).send({ error: NOT_FOUND })
+                    throw { returnAlready: NOT_FOUND }
 
-                return res.status(200).send(data)
-            }).catch((error) => {
+                return data
+            })
+            .then((data) => {
+
+                // Return the image if its public
+                if(!data.private) {
+                    throw { returnAlready: data }
+                }
+
+                return data
+            })
+            .then(() => getAuthenticatedUserFromRequest(req))
+            .then(data => { 
+                return data.id == userID ? res.status(200).send(data) : res.status(200).send({ error: NO_AUTHORIZATION }) 
+            })
+            .catch((error) => {
+
+                if(error.returnAlready) {
+                    return res.status(404).send({ error: error.returnAlready })
+                }
+
+                if(error instanceof InvalidUserError) {
+                    return res.status(400).json({error: error.errorDescription})
+                }
+
                 console.error(error)
                 return res.status(500).json({error: INTERNAL_SERVER_ERROR})
             })
