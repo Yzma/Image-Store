@@ -1,14 +1,9 @@
 
-import prisma from '../../../../../../util/prisma'
 import { getSession } from 'next-auth/client'
 
 import { imageSchema } from '../../../../../../util/joiSchemas'
-import { IMAGE_DESTINATION_FOLDER } from '../../../../../../util/constants'
 
 import { getImage, updateImage, deleteImage } from '../../../../../../util/database/imageRepository/localFileImageRepository'
-
-const path = require('path')
-const fs = require('fs')
 
 export default async (req, res) => {
 
