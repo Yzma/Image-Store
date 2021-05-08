@@ -53,6 +53,22 @@ export const getUserFromAccessToken = async (accessToken) => {
     return result?.userId
 }
 
+export function updateUserBalance(userID) {
+    return prisma.user.update({
+        where: {
+            id: parseInt(userID)
+        },
+
+        data: {
+            balance: balance 
+        },
+
+        select: {
+            balance: true
+        }
+    })
+}
+
 export function getUserTransactions(userID, option) {
     return new Promise((resolve, reject) => {
         try {
