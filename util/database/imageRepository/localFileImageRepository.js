@@ -7,9 +7,10 @@
 */
 
 import prisma from '../../prisma'
-import { MAX_IMAGES_PER_PAGE } from '../../constants'
+import { IMAGE_DESTINATION_FOLDER, MAX_IMAGES_PER_PAGE } from '../../constants'
+import mimeTypes from 'mime-types'
 
-// const fs = require('fs');
+const fs = require('fs');
 // const path = require('path');
 
 export function getImage(userID, imageID) {
@@ -84,8 +85,15 @@ export function getPublicImages(currentPage = 0) {
     return publicImages
 }
 
-export async function getImageOnDisk(filePath) {
-
+export function getImageOnDisk(imageName) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(`${IMAGE_DESTINATION_FOLDER}/${imageName}`, (err, data) => {
+            if (err)
+                return reject(err);
+            else
+                return resolve({ imageData: data, mimeType: mimeTypes.lookup(imageName)});
+        });
+    });
 }
 
 export async function uploadImages(userID, images) {
@@ -94,12 +102,12 @@ export async function uploadImages(userID, images) {
 
 export async function deleteImages(userID, imageIDs) {
 
-    const deletedImages = prisma.image.deleteMany({
+    return prisma.image.deleteMany({
         where: {
             AND: [
                 {
                     id: {
-                        in: ids
+                        in: imageIDs
                     }
                 },
 
@@ -109,8 +117,6 @@ export async function deleteImages(userID, imageIDs) {
             ]
         }
     })
-
-    return deletedImages
 }
 
 export async function updateImage(userID, imageID, updatedSettings) {
