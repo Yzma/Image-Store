@@ -1,6 +1,8 @@
 import prisma from "../prisma"
 
 import { getSession } from 'next-auth/client'
+import { InvalidUserError } from "../errors"
+import * as RESPONSE_ERRORS from "../constants/response_constants"
 
 export function getUser(userID) {
     return prisma.user.findFirst({
@@ -18,39 +20,46 @@ export function getUser(userID) {
     })
 }
 
-export async function getUserByReq(session) {
-    const userID = await getUserFromAccessToken(session?.accessToken)
-    const user = await getUser(userID)
+export function getAuthenticatedUserFromRequest(req) {
+    return getSession({req})
+        .then((session) => {
 
-    console.log(user)
-    return user
-}
+            if (!session) {
+                throw new InvalidUserError(RESPONSE_ERRORS.INVALID_SESSION_DATA)
+            }
 
-export async function getUserBySession(session) {
-    const userSession = await getSession(session)
-    const userID = await getUserFromAccessToken(userSession?.accessToken)
-    const user = await getUser(userID)
+            return prisma.session.findFirst({
+                where: {
+                    accessToken: session.accessToken
+                },
 
-    console.log(user)
-    return user
-}
+                select: {
+                    userId: true
+                }
+            })
+        })
+        .then((userID) => {
 
-export const getUserFromAccessToken = async (accessToken) => {
+            if (!userID) {
+                throw new InvalidUserError(RESPONSE_ERRORS.USER_NOT_FOUND)
+            }
 
-    if (!accessToken)
-        return null
+            const { userID: id } = userID
 
-    const result = await prisma.session.findFirst({
-        where: {
-            accessToken: accessToken
-        },
+            return prisma.user.findFirst({
+                where: {
+                    id: id
+                },
 
-        select: {
-            userId: true
-        }
-    })
-
-    return result?.userId
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    createdAt: true,
+                    balance: true
+                }
+            })
+        })
 }
 
 export function updateUserBalance(userID) {
@@ -72,10 +81,9 @@ export function updateUserBalance(userID) {
 export function getUserTransactions(userID, option) {
     return new Promise((resolve, reject) => {
         try {
-            const result = prisma.transaction.findMany(getTransactionQueryByOption(userID, option))
-            resolve(result)
+            return resolve(prisma.transaction.findMany(getTransactionQueryByOption(userID, option)))
         } catch(error) {
-            reject(error)
+            return reject(error)
         }
     })
 }
