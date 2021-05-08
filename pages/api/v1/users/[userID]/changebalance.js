@@ -1,6 +1,8 @@
-import prisma from "../../../../../util/prisma"
 
 import { userBalanceSchema } from '../../../../../util/joiSchemas'
+import { updateUserBalance } from '../../../../../util/database/userUtil'
+
+import { ValidationError } from 'joi'
 
 export default async (req, res) => {
 
@@ -13,26 +15,20 @@ export default async (req, res) => {
         
         const { balance } = req.body
 
-        const { error } = userBalanceSchema.validate({ balance: balance })
-        if(error) {
-            return res.status(400).json({error: "Invalid data"})
-        }
+        return await userBalanceSchema.validateAsync({ balance: balance })
+            .then(() => updateUserBalance(userID, balance))
+            .then((data) => res.status(200).json(data))
+            .catch((error) => {
+                if(error instanceof ValidationError) {
+                    return res.status(400).json({error: 'Invalid data'})
+                }
 
-        const updatedUserBalance = await prisma.user.update({
-            where: {
-                id: parseInt(userID)
-            },
+                if (error.code == 'P2025') {
+                    return res.status(404).send({ error: "Resource not found" })
+                }
 
-            data: {
-                balance: balance 
-            },
-
-            select: {
-                balance: true
-            }
-        })
-
-        return res.status(200).json(updatedUserBalance)
+                return res.status(400).json({error: 'Not found'})
+            })
 
     } else {
         res.status(404).json({ error: `${req.method} is not supported` })
