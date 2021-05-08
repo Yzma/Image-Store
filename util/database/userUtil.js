@@ -36,8 +36,8 @@ export async function getUserBySession(session) {
 }
 
 export const getUserFromAccessToken = async (accessToken) => {
-    
-    if(!accessToken)
+
+    if (!accessToken)
         return null
 
     const result = await prisma.session.findFirst({
@@ -53,6 +53,29 @@ export const getUserFromAccessToken = async (accessToken) => {
     return result?.userId
 }
 
-export function getUserTransactions(userID) {
+export function getUserTransactions(userID, option) {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = prisma.transaction.findMany(getTransactionQueryByOption(userID, option))
+            resolve(result)
+        } catch(error) {
+            reject(error)
+        }
+    })
+}
 
+function getTransactionQueryByOption(userID, option) {
+    if(option.equals === "bought") {
+        return {
+            where: {
+                buyerUserID: userID
+            }
+        }
+    } else if(option.equals === "sold") {
+        return {
+            where: {
+                sellerUserID: userID
+            }
+        }
+    }
 }
