@@ -92,8 +92,25 @@ export async function uploadImages(userID, images) {
 
 }
 
-export async function deleteImages(userID, images) {
+export async function deleteImages(userID, imageIDs) {
 
+    const deletedImages = prisma.image.deleteMany({
+        where: {
+            AND: [
+                {
+                    id: {
+                        in: ids
+                    }
+                },
+
+                {
+                    userID: userID
+                }
+            ]
+        }
+    })
+
+    return deletedImages
 }
 
 export async function updateImage(userID, imageID, updatedSettings) {
