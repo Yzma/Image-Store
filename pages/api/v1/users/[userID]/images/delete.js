@@ -2,40 +2,47 @@
 import prisma from '../../../../../../util/prisma'
 import { getSession } from 'next-auth/client'
 
-import { deleteImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
+// import { deleteImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
+import { imageDeleteSchema } from '../../../../../../util/joiSchemas'
 
 export default async (req, res) => {
 
     // DELETE image by ID - TODO: Figure out how to return API code for this
     if (req.method === "DELETE") {
 
+        const { ids } = req.body
+
         try {
-            // const deletedImageResult = await prisma.image.delete({
-            //     where: {
-            //         id: parseInt(imageID)
-            //     }
-            // })
 
-            // const fileToDelete = `${IMAGE_DESTINATION_FOLDER}/${deletedImageResult.fileName}`
+            const { error } = imageDeleteSchema.validate({ ids: ids })
+            if(error) {
+                return res.status(400).json({error: "Invalid data"})
+            }
 
-            // // TODO: Handle this
-            // path.unlink(fileToDelete, (err) => {
-            //     if (err) {
-            //         console.error(err)
-            //         return res.status(200).json({ error: "DELETED IN DATABASE BUT NOT ON FILE SYSTEM!" })
-            //     }
+            // Just assume
+            const userID = 2
 
-            //     //file removed
-            //     return res.status(200).json(deletedImageResult)
-            // })
+            const deletedImages = await prisma.image.deleteMany({
+                where: {
+                    AND: [
+                        {
+                            id: {
+                                in: ids
+                            }
+                        },
 
-            const deletedImageResult = await deleteImages()
+                        {
+                            userID: userID
+                        }
+                    ]
+                }
+            })
 
-            return res.status(200).json({ deletedImageResult })
-
-        } catch (error) {
-            console.error(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(200).json(deletedImages)
+            
+        } catch(err) {
+            console.error(err)
+            return res.status(500).json({error: 'Internal Server Error'})
         }
 
     } else {
