@@ -4,6 +4,7 @@ import { getUserFromAccessToken } from '../../../../../../util/database/userUtil
 import { getSession } from 'next-auth/client'
 
 import { MulterMiddleware } from '../../../../../../util/middleware/multer'
+import multer from 'multer';
 
 export default async (req, res) => {
 
@@ -43,44 +44,63 @@ export default async (req, res) => {
     // POST request to upload image
     } else if(req.method === "POST") {
 
-        try {
+        return await MulterMiddleware(req, res).then(() => {
 
-            // TODO: Error handling - What if all files aren't uploaded or something in the database fails?
-            return await MulterMiddleware(req, res).then(async (value) => {
+            // After multer has finished validating and processing the incoming files, we then create an array of transactions
+            // that will map the files on disk to the database.
 
-                const transactions = []
-                for(const newImg of req.files) {
+            const transactions = []
 
-                    const result = prisma.image.create({
-                        data: {
-                            title: newImg.originalname,
-                            fileName: newImg.filename,
-                            fileType: newImg.mimetype,
-                            user: {
-                                connect: {
-                                    id: 1
-                                }
+            for(const newImg of req.files) {
+
+                const result = prisma.image.create({
+                    data: {
+                        title: newImg.originalname,
+                        fileName: newImg.filename,
+                        fileType: newImg.mimetype,
+                        user: {
+                            connect: {
+                                id: 1
                             }
                         }
-                    })
-    
-                    transactions.push(result)
+                    }
+                })
+
+                transactions.push(result)
+            }
+
+            return transactions
+
+        }).then((transactions) =>
+
+            // Batch the transactions that we created to map each file into the database
+            prisma.$transaction(transactions)
+
+        ).then((value) => {
+
+            // After everything is complete, return that all files were successfully uploaded
+            console.log(value)
+            return res.status(200).json({success: "Made it here!"})
+        })
+        
+        .catch((error) => {
+
+            // The error handling here is a little weird due to how Multer does it's error handling.
+            // This catches all the errors that are most likely to happen, and returns a 500 if it's a different error.
+            if (error instanceof multer.MulterError) {
+                if(error.code == 4) {
+                    return res.status(400).json({error: 'Files are too large'})
+                } else if(error.code == 5) {
+                    return res.status(400).json({error: 'Too many files'})
                 }
-    
-                await prisma.$transaction(transactions) // Operations succeed or fail together
+            } else if(error.name === "InvalidFileTypeError") {
+                return res.status(400).json({error: 'Invalid file types'})
+            }
 
-                return res.status(200).json({success: "Made it here!"})
-
-            }).catch((error) => {
-                console.log(error)
-                return res.status(400).json({error: 'Error uploading files'})
-            })
-
-          
-        } catch(e) {
-            console.error("Exception: ", e)
-            return res.status(500).json({error: "Internal server error"})
-        }
+            // Unhandled - something else failed somewhere
+            console.error(error)
+            return res.status(500).json({error: 'Error uploading files'})
+        })
 
     } else {
         res.status(404).json({ error: `${req.method} is not supported` })
