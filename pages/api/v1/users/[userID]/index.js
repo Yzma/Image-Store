@@ -1,7 +1,6 @@
 
-import prisma from '../../../../../util/prisma'
-import { getSession } from 'next-auth/client'
 import { getUser } from '../../../../../util/database/userUtil'
+import { METHOD_NOT_SUPPORTED, USER_NOT_FOUND } from '../../../../../util/constants/response_constants'
 
 export default async (req, res) => {
 
@@ -12,15 +11,16 @@ export default async (req, res) => {
     */
     if (req.method === "GET") {
         
-        const foundUser = await getUser(userID)
+        return await getUser(userID)
+            .then((data) => {
+                if(!data) {
+                    return res.status(404).json({ error: USER_NOT_FOUND })
+                }
 
-        if(!foundUser) {
-            return res.status(404).json({ error: `Not found` })
-        }
-
-        return res.status(200).json(foundUser)
+                return res.status(200).json(data)
+            })
 
     } else {
-        res.status(404).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: METHOD_NOT_SUPPORTED })
     }
 }
