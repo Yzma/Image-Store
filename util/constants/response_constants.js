@@ -1,7 +1,7 @@
 
 export const NOT_FOUND = "Resource not found"
 
-export const NO_AUTHORIZATION = "You are not authorized to view this resource"
+export const NO_AUTHORIZATION = "You are not authorized to perform this action"
 
 export const INVALID_DATA = "Invalid data"
 
