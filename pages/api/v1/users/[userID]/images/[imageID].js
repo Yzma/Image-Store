@@ -18,25 +18,17 @@ export default async (req, res) => {
     // Get Image by ID
     if(req.method === "GET") {
 
-        try {
-            const requestedImage = await getImage(userID, imageID)
+        // TODO: Validate image and user ID
+        return await getImage(userID, imageID)
+            .then((data) => {
+                if (!data)
+                    return res.status(404).send({ error: 'Not Found' })
 
-            if(!requestedImage) {
-                return res.status(404).send({error: "Resource not found"})
-            }
-
-            if(!req.url.endsWith(".png")) {
-                return res.status(200).send(requestedImage)
-            } else {
-                const data = fs.readFileSync(`${IMAGE_DESTINATION_FOLDER}/${requestedImage.fileName}`)
-                res.setHeader('Content-Type', 'image/jpg');
                 return res.status(200).send(data)
-            }
-
-        } catch (error) {
-            console.error(error)
-            return res.status(500).json({error: 'Internal Server Error'})
-        }
+            }).catch((error) => {
+                console.error(error)
+                return res.status(500).json({error: 'Internal Server Error'})
+            })
 
     // PATCH request for updating image information
     } else if(req.method === "PATCH") {

@@ -60,15 +60,13 @@ export function getImageById(imageID) {
 }
 export async function getImages(userID) {
 
-    const userImages = await prisma.image.findMany({
+    return prisma.image.findMany({
         where: {
             user: {
                 id: parseInt(userID)
             }
         }
     })
-
-    return userImages
 }
 
 //https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing 
