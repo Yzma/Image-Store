@@ -98,6 +98,15 @@ export async function uploadImages(userID, images) {
 
 }
 
+export function deleteImage(userID, imageID) {
+    return prisma.image.delete({
+        where: {
+            id: imageID,
+            userID: userID
+        }
+    })
+}
+
 export async function deleteImages(userID, imageIDs) {
 
     return prisma.image.deleteMany({
