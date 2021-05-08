@@ -1,9 +1,9 @@
 
 import prisma from '../../../../../../util/prisma'
-import { getUserFromAccessToken } from '../../../../../../util/database/userUtil'
+import { getUserFromAccessToken, getUserByReq } from '../../../../../../util/database/userUtil'
 import { getSession } from 'next-auth/client'
 
-import { MulterMiddleware } from '../../../../../../util/middleware/multer'
+import { MulterMiddleware, InvalidFileTypeError } from '../../../../../../util/middleware/multer'
 import multer from 'multer';
 
 export default async (req, res) => {
@@ -44,11 +44,33 @@ export default async (req, res) => {
     // POST request to upload image
     } else if(req.method === "POST") {
 
-        return await MulterMiddleware(req, res).then(() => {
+        // TODO: Check permissions
+        const promise = new Promise(async (resolve, reject) => {
+            
+            const session = await getSession({ req })
+            if(!session) {
+                return reject(null)
+            }
+
+            const user = await getUserByReq(session)
+            if(!user) {
+                return reject(null)
+            }
+
+            if(user.id != parseInt(userID)) {
+                return reject(null)
+            }
+
+            console.log(user)
+            return resolve(user)
+
+          }).then(() => MulterMiddleware(req, res)).then(() => {
 
             // After multer has finished validating and processing the incoming files, we then create an array of transactions
             // that will map the files on disk to the database.
 
+            // TODO: Still don't like this... Find out a better way to batch, perhaps just remove the array entirely?
+            const parsedUserID = parseInt(userID)
             const transactions = []
 
             for(const newImg of req.files) {
@@ -60,7 +82,7 @@ export default async (req, res) => {
                         fileType: newImg.mimetype,
                         user: {
                             connect: {
-                                id: 1
+                                id: parsedUserID
                             }
                         }
                     }
@@ -93,7 +115,7 @@ export default async (req, res) => {
                 } else if(error.code == 5) {
                     return res.status(400).json({error: 'Too many files'})
                 }
-            } else if(error.name === "InvalidFileTypeError") {
+            } else if(error instanceof InvalidFileTypeError && error.name === "InvalidFileTypeError") {
                 return res.status(400).json({error: 'Invalid file types'})
             }
 
@@ -101,6 +123,8 @@ export default async (req, res) => {
             console.error(error)
             return res.status(500).json({error: 'Error uploading files'})
         })
+
+        return await promise
 
     } else {
         res.status(404).json({ error: `${req.method} is not supported` })
