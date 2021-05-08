@@ -1,5 +1,4 @@
 
-import prisma from '../../../../../../util/prisma'
 import { getSession } from 'next-auth/client'
 
 import { deleteImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
