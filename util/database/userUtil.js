@@ -9,12 +9,21 @@ export function getUser(userID) {
         },
 
         select: {
+            id: true,
             name: true,
             image: true,
             createdAt: true,
             balance: true
         }
     })
+}
+
+export async function getUserByReq(session) {
+    const userID = await getUserFromAccessToken(session?.accessToken)
+    const user = await getUser(userID)
+
+    console.log(user)
+    return user
 }
 
 export async function getUserBySession(session) {
@@ -42,4 +51,8 @@ export const getUserFromAccessToken = async (accessToken) => {
     })
 
     return result?.userId
+}
+
+export function getUserTransactions(userID) {
+
 }
