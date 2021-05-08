@@ -13,7 +13,6 @@ import { Col, Row, Image, Card, Button, Container, ListGroup, Tooltip, OverlayTr
 
 import { signIn, useSession } from 'next-auth/client'
 
-import { Routes } from "../routes";
 import ThemesbergLogoIcon from "../public/assets/img/themesberg.svg";
 import ThemesbergLogo from "../public/assets/img/themesberg-logo.svg";
 import MockupPresentation from "../public/assets/img/mockup-presentation.png";
@@ -57,9 +56,6 @@ export const NotSignedInHomepage = () => {
               <p className="text-muted fw-light h5">A bug tracking application for teams that want to keep track of issues for their projects.</p>
               <p className="text-muted fw-light h5">Created with Volt, NextJS and MongoDB.</p>
               <div className="d-flex align-items-center justify-content-center">
-                <Button variant="secondary" to={Routes.DashboardOverview.path} className="text-dark me-3">
-                  Explore dashboard <FontAwesomeIcon icon={faExternalLinkAlt} className="d-none d-sm-inline ms-1" />
-                </Button>
                 {/* <GitHubButton className="mt-lg-2" href="https://github.com/themesberg/volt-react-dashboard" data-size="large" data-show-count="true" aria-label="Star themesberg/volt-react-dashboard on GitHub">Star</GitHubButton> */}
               </div>
             </Col>
@@ -118,7 +114,7 @@ export const NotSignedInHomepage = () => {
               <h2>Powered by React.js</h2>
               <p className="mb-3 lead fw-bold">The most popular front-end library in the world</p>
               <p className="mb-4">Volt React is an admin dashboard template that is built using React.js components using react hooks and a data-driven structure that can kick-start your app in no time.</p>
-              <Button to={Routes.DashboardOverview.path} variant="secondary" target="_blank">Live Demo <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /></Button>
+              <Button to={'/'} variant="secondary" target="_blank">Live Demo <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /></Button>
               <Button to="#download" variant="outline-primary" className="ms-3"><FontAwesomeIcon icon={faShoppingCart} className="me-1" /> Download</Button>
             </Col>
             <Col lg={6} className="order-lg-1">
@@ -131,7 +127,7 @@ export const NotSignedInHomepage = () => {
               <p className="mb-3 lead fw-bold">100+ premium UI elements based on Bootstrap 5</p>
               <p className="mb-4">We've built over 100 React.js powered components to be used throughout your application saving you time kickstarting your project.</p>
               <p className="mb-4">Check out the components and use our live React.js component editor to try the code.</p>
-              <Button to={Routes.Forms.path} variant="secondary" className="mb-5 mb-lg-0" target="_blank"><FontAwesomeIcon icon={faReact} className="me-1" /> Components examples</Button>
+              <Button to={'/'} variant="secondary" className="mb-5 mb-lg-0" target="_blank"><FontAwesomeIcon icon={faReact} className="me-1" /> Components examples</Button>
             </Col>
             <Col lg={6} className="rounded shadow pt-3">
               {/* <Code scope={{ Form, Button }} code={`<Form>
@@ -240,7 +236,7 @@ export const NotSignedInHomepage = () => {
               <div className="d-none d-lg-block mt-5">
                 <h4>The perfect folder structure for your project</h4>
                 <p className="lead mb-4">The folder structure is based on the popular <code>create-react-app</code> repository using Sass source files for CSS preprocessing.</p>
-                <Button variant="secondary" size="md" to={Routes.DocsFolderStructure.path} target="_blank" className="text-dark">
+                <Button variant="secondary" size="md" to={'/'} target="_blank" className="text-dark">
                   <FontAwesomeIcon icon={faCodeBranch} className="me-2" /> Folder Structure
                 </Button>
               </div>
