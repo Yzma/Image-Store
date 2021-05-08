@@ -12,7 +12,7 @@ export default async (req, res) => {
         
         const { option } = req.body
 
-        const userTransactions = transactionModeSchema.validateAsync({ option: option })
+        return await transactionModeSchema.validateAsync({ option: option })
             .then(() => getUserTransactions(userID, option))
             .then((data) => {
                 return res.status(200).json(data)
@@ -23,8 +23,6 @@ export default async (req, res) => {
                 }
                 return res.status(400).json({error: 'Not found'})
             })
-
-        return await userTransactions
 
     } else {
         res.status(404).json({ error: `${req.method} is not supported` })
