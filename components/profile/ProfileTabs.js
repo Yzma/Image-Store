@@ -1,152 +1,109 @@
 
-import React from "react";
+import { useSession } from 'next-auth/client'
+import useSWR from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCheck, faCog, faEdit, faEllipsisH, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faEdit, faEllipsisH, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination } from '@themesberg/react-bootstrap';
 import { UploadButton } from '../UploadButton'
 
 import { ImageDisplayGrid } from '../images/ImageDisplayGrid'
 
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
 export const ProfileTabs = (props) => {
 
-    const { images } = props.images
-    console.log('2nd', props.images)
+    const [ session, loading ] = useSession() 
+    //const { images } = props.images
 
-    // TODO: Transaction ID, Photo name, Seller, amount paid, purchase date
-    const transactions = [
-      {
-          "invoiceNumber": 300499,
-          "status": "Paid",
-          "subscription": "Platinum Subscription Plan",
-          "price": "799,00",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300498,
-          "status": "Paid",
-          "subscription": "Platinum Subscription Plan",
-          "price": "799,00",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300497,
-          "status": "Paid",
-          "subscription": "Flexible Subscription Plan",
-          "price": "233,42",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300496,
-          "status": "Due",
-          "subscription": "Gold Subscription Plan",
-          "price": "533,42",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300495,
-          "status": "Due",
-          "subscription": "Gold Subscription Plan",
-          "price": "533,42",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300494,
-          "status": "Due",
-          "subscription": "Flexible Subscription Plan",
-          "price": "233,42",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300493,
-          "status": "Canceled",
-          "subscription": "Gold Subscription Plan",
-          "price": "533,42",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300492,
-          "status": "Canceled",
-          "subscription": "Platinum Subscription Plan",
-          "price": "799,00",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      },
-      {
-          "invoiceNumber": 300491,
-          "status": "Paid",
-          "subscription": "Platinum Subscription Plan",
-          "price": "799,00",
-          "issueDate": 'some date',
-          "dueDate": 'some date'
-      }
-    ]
+    console.log('sda', props)
+    const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
+
+    // const { images, imagesError } = useSWR(
+    //   ["http://localhost:3000/api/v1/users/1/images", session],
+    //   fetcher,
+    //   // {
+    //   //   revalidateOnFocus: false,
+    //   //   revalidateOnMount:false,
+    //   //   revalidateOnReconnect: false,
+    //   //   refreshWhenOffline: false,
+    //   //   refreshWhenHidden: false,
+    //   //   refreshInterval: 0
+    //   // }
+    // );
+
+    if (error) return "An error has occurred.";
+    if (!data) return "Loading...";
+    // if(!images) return 'loading...'
+
+    console.log('Images: ', data)
+
+    // const { transactions, error } = useSWR(
+    //   ["http://localhost:3000/api/v1/users/1/transactions?option=bought", session],
+    //   fetcher,
+    //   {
+    //     revalidateOnFocus: false,
+    //     revalidateOnMount:false,
+    //     revalidateOnReconnect: false,
+    //     refreshWhenOffline: false,
+    //     refreshWhenHidden: false,
+    //     refreshInterval: 0
+    //   }
+    // );
     
-    const totalTransactions = transactions.length;
-  
+    // if(!transactions) return 'loading...'
+
+    // console.log('error: ', error)
+    // console.log('transactions: ', data)
+
+    const transactions = null
+
+    const totalTransactions = transactions?.length || 0;
+
     const TableRow = (props) => {
-      const { invoiceNumber, subscription, price, issueDate, dueDate, status } = props;
-      const statusVariant = status === "Paid" ? "success"
-        : status === "Due" ? "warning"
-          : status === "Canceled" ? "danger" : "primary";
-  
+      const { tableNumber, id, image, imageID, sellerUserID, amount, datePurchased } = props;
+      console.log(tableNumber)
+      console.log(id)
+      console.log(imageID)
+      console.log(sellerUserID)
+      console.log(amount)
+      console.log(datePurchased)
+
       return (
         <tr>
           <td>
             <Card.Link className="fw-normal">
-              {invoiceNumber}
+              {tableNumber}
             </Card.Link>
           </td>
           <td>
             <span className="fw-normal">
-              {subscription}
+              {id}
             </span>
           </td>
           <td>
             <span className="fw-normal">
-              {issueDate}
+              {image.title}
             </span>
           </td>
           <td>
             <span className="fw-normal">
-              {dueDate}
+              {imageID}
             </span>
           </td>
           <td>
             <span className="fw-normal">
-              ${parseFloat(price).toFixed(2)}
+              {sellerUserID}
             </span>
           </td>
           <td>
-            <span className={`fw-normal text-${statusVariant}`}>
-              {status}
+            <span className="fw-normal">
+              {amount}
             </span>
           </td>
           <td>
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item>
-                  <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-                </Dropdown.Item>
-                <Dropdown.Item className="text-danger">
-                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <span className="fw-normal">
+              {datePurchased}
+            </span>
           </td>
         </tr>
       )
@@ -215,7 +172,9 @@ export const ProfileTabs = (props) => {
                 </Row>
               </div> */}
 
-              <ImageDisplayGrid images={props.images} />
+
+
+              <ImageDisplayGrid images={data} />
             </Tab.Pane>
 
             {/* Purchased Images Tab */}
@@ -260,29 +219,15 @@ export const ProfileTabs = (props) => {
               <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
                   <Col xs={8} md={6} lg={3} xl={4}>
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <FontAwesomeIcon icon={faSearch} />
-                      </InputGroup.Text>
-                      <Form.Control type="text" placeholder="Search" />
-                    </InputGroup>
-                  </Col>
-                  <Col xs={4} md={2} xl={1} className="ps-md-0 text-end">
-                    <Dropdown as={ButtonGroup}>
-                      <Dropdown.Toggle split as={Button} variant="link" className="text-dark m-0 p-0">
-                        <span className="icon icon-sm icon-gray">
-                          <FontAwesomeIcon icon={faCog} />
-                        </span>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu className="dropdown-menu-xs dropdown-menu-right">
-                        <Dropdown.Item className="fw-bold text-dark">Show</Dropdown.Item>
-                        <Dropdown.Item className="d-flex fw-bold">
-                          10 <span className="icon icon-small ms-auto"><FontAwesomeIcon icon={faCheck} /></span>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="fw-bold">20</Dropdown.Item>
-                        <Dropdown.Item className="fw-bold">30</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                    <Form>
+                      <Form.Group controlId="exampleForm.ControlSelect1">
+                        <Form.Label>Transactions Filter</Form.Label>
+                        <Form.Control as="select">
+                          <option>Bought</option>
+                          <option>Sold</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form>
                   </Col>
                 </Row>
               </div>
@@ -295,13 +240,17 @@ export const ProfileTabs = (props) => {
                         <th className="border-bottom">#</th>
                         <th className="border-bottom">Transaction ID</th>
                         <th className="border-bottom">Photo Name</th>
+                        <th className="border-bottom">Photo ID</th>
                         <th className="border-bottom">Seller ID</th>
                         <th className="border-bottom">Total</th>
                         <th className="border-bottom">Purchase Date</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {transactions.map(t => <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />)}
+                      {/* {data && data.map((transaction, index) => {
+                        console.log(transaction)
+                        return <TableRow key={`transaction-${transaction.id}`} tableNumber={index + 1} {...transaction} />
+                      })} */}
                     </tbody>
                   </Table>
                   <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
