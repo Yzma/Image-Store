@@ -25,7 +25,7 @@ export function getUser(userID) {
     })
 }
 
-export function getAuthenticatedUserFromRequest(req) {
+export function getAuthenticatedUserFromRequest(req, options = null) {
     return getSession({req})
         .then((session) => {
 
@@ -47,6 +47,12 @@ export function getAuthenticatedUserFromRequest(req) {
 
             if (!userID) {
                 throw new InvalidUserError(RESPONSE_ERRORS.USER_NOT_FOUND)
+            }
+
+            if(options?.ensureUserID) {
+                if(userID != options?.ensureUserID) {
+                    throw new InvalidUserError(RESPONSE_ERRORS.NO_AUTHORIZATION)
+                }
             }
 
             const { userId: id } = userID
@@ -86,24 +92,47 @@ export function updateUserBalance(userID, balance) {
 export function getUserTransactions(userID, option) {
     return new Promise((resolve, reject) => {
         try {
-            return resolve(prisma.transaction.findMany(getTransactionQueryByOption(userID, option)))
+            return resolve(prisma.transaction.findMany(getTransactionQueryByOption(parseInt(userID), option)))
         } catch(error) {
             return reject(error)
         }
     })
 }
 
+export function getUserProducts(userID) {
+    return prisma.product.findMany({
+        where: {
+            image: {
+                userID: userID
+            }
+        }
+    })
+}
+
+export function attemptPurchase(userID, imageID) {
+
+}
+
 function getTransactionQueryByOption(userID, option) {
-    if(option.equals === TRANSACTION_QUERY.BOUGHT) {
+    if(option == TRANSACTION_QUERY.BOUGHT) {
+        
         return {
             where: {
                 buyerUserID: userID
+            },
+
+            include: {
+                image: true
             }
         }
-    } else if(option.equals === TRANSACTION_QUERY.SOLD) {
+    } else if(option == TRANSACTION_QUERY.SOLD) {
         return {
             where: {
                 sellerUserID: userID
+            },
+
+            include: {
+                image: true
             }
         }
     }
