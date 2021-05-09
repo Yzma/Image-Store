@@ -62,7 +62,7 @@ export function getAuthenticatedUserFromRequest(req) {
         })
 }
 
-export function updateUserBalance(userID) {
+export function updateUserBalance(userID, balance) {
     return prisma.user.update({
         where: {
             id: parseInt(userID)
