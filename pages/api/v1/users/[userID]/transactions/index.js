@@ -12,7 +12,7 @@ export default async (req, res) => {
 
     if (req.method === "GET") {
         
-        const { option } = req.body
+        const { option } = req.query
 
         return await transactionModeSchema.validateAsync({ option: option })
             .then(() => getAuthenticatedUserFromRequest(req))
