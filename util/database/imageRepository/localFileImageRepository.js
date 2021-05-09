@@ -39,7 +39,7 @@ export function getImage(userID, imageID) {
 
 export function getImageById(imageID) {
 
-    const requestedImage = prisma.image.findFirst({
+    return prisma.image.findFirst({
         where: {
             id: parseInt(imageID),
         },
@@ -55,9 +55,8 @@ export function getImageById(imageID) {
             userID: true
         }
     })
-
-    return requestedImage
 }
+
 export function getImages(userID) {
 
     return prisma.image.findMany({
@@ -130,7 +129,7 @@ export async function updateImage(userID, imageID, updatedSettings) {
 
     const { title, description, private: isPrivate } = updatedSettings
 
-    const updatedImage = await prisma.image.update({
+    return prisma.image.update({
         where: {
             id_userID: {
                 id: parseInt(imageID),
@@ -144,6 +143,4 @@ export async function updateImage(userID, imageID, updatedSettings) {
             private: isPrivate
         }
     })
-
-    return updatedImage
 }
