@@ -6,7 +6,7 @@ import { imageDeleteSchema } from '../../../../../../util/joiSchemas'
 import { ValidationError } from 'joi'
 import { InvalidUserError } from '../../../../../../util/errors'
 
-import { INVALID_DATA, NOT_FOUND, METHOD_NOT_SUPPORTED } from '../../../../../../util/constants/response_constants'
+import { INVALID_DATA, METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR } from '../../../../../../util/constants/response_constants'
 
 export default async (req, res) => {
 
@@ -26,7 +26,8 @@ export default async (req, res) => {
                     return res.status(400).json({error: error.errorDescription})
                 }
 
-                return res.status(400).json({error: NOT_FOUND})
+                console.error(error)
+                return res.status(500).json({error: INTERNAL_SERVER_ERROR})
             })
 
     } else {

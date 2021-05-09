@@ -108,7 +108,28 @@ export function deleteImage(userID, imageID) {
 
 export async function deleteImages(userID, imageIDs) {
 
-    return prisma.image.deleteMany({
+    const foundImagesIDs = prisma.image.findMany({
+        
+        where: {
+            AND: [
+                {
+                    id: {
+                        in: imageIDs
+                    }
+                },
+
+                {
+                    userID: userID
+                }
+            ]
+        },
+
+        select: {
+            fileName: true
+        }
+    })
+
+    const imagesToDelete = prisma.image.deleteMany({
         where: {
             AND: [
                 {
@@ -123,6 +144,40 @@ export async function deleteImages(userID, imageIDs) {
             ]
         }
     })
+
+    return prisma.$transaction([foundImagesIDs, imagesToDelete])
+        .then((data) => {
+            const [retrievedImageIDs, deletedRowsCount] = data
+
+            console.log(retrievedImageIDs)
+            console.log(deletedRowsCount)
+
+            if (deletedRowsCount.count > 0) {
+                return Promise.all(
+                    retrievedImageIDs.map(
+                        file =>
+                            
+                            new Promise((res, rej) => {
+                                try {
+                                    console.log('File: ', file)
+                                    //unlink(`${IMAGE_DESTINATION_FOLDER}/${data.fileName}`)
+                                    unlink(`${IMAGE_DESTINATION_FOLDER}/${file.fileName}`, err => {
+                                        if (err) throw err;
+                                        console.log(`${file.fileName} was deleted`);
+                                        res()
+                                    });
+
+                                } catch (err) {
+                                    console.error(err);
+                                    rej(err);
+                                }
+                            })
+                    )
+                )
+            }
+
+            return null
+        })
 }
 
 export async function updateImage(userID, imageID, updatedSettings) {
