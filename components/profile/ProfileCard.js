@@ -1,12 +1,11 @@
 
 import React from "react";
-import { Card, Button } from '@themesberg/react-bootstrap';
+import { Card } from '@themesberg/react-bootstrap';
 
 import DefaultProfilePicture from "../../public/assets/img/team/profile-picture-1.jpg";
-import ProfileCover from "../../public/assets/img/profile-cover.jpg";
 
 export const ProfileCard = (props) => {
-    const { name, money, image } = props.userInformation;
+    const { name, balance, image } = props.userInformation;
   
     return (
       <Card border="light" className="text-center p-0 mb-4">
@@ -14,7 +13,7 @@ export const ProfileCard = (props) => {
         <Card.Body className="pb-5">
           <Card.Img src={image ? image : DefaultProfilePicture} alt="Default Image" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
           <Card.Title>{name}</Card.Title>
-          <Card.Subtitle>{money.toFixed(2)}</Card.Subtitle>
+          <Card.Subtitle>{balance.toFixed(2)}</Card.Subtitle>
         </Card.Body>
       </Card>
     );
