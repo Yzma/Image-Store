@@ -49,13 +49,13 @@ export function getAuthenticatedUserFromRequest(req, options = null) {
                 throw new InvalidUserError(RESPONSE_ERRORS.USER_NOT_FOUND)
             }
 
+            const { userId: id } = userID
+
             if(options?.ensureUserID) {
-                if(userID != options?.ensureUserID) {
+                if(id != options.ensureUserID) {
                     throw new InvalidUserError(RESPONSE_ERRORS.NO_AUTHORIZATION)
                 }
-            }
-
-            const { userId: id } = userID
+            }            
 
             return prisma.user.findFirst({
                 where: {
