@@ -6,6 +6,8 @@ import { imageDeleteSchema } from '../../../../../../util/joiSchemas'
 import { ValidationError } from 'joi'
 import { InvalidUserError } from '../../../../../../util/errors'
 
+import { INVALID_DATA, NOT_FOUND, METHOD_NOT_SUPPORTED } from '../../../../../../util/constants/response_constants'
+
 export default async (req, res) => {
 
     // DELETE image by ID - TODO: Figure out how to return API code for this
@@ -19,15 +21,15 @@ export default async (req, res) => {
             .then((data) => res.status(200).json(data))
             .catch((error) => {
                 if(error instanceof ValidationError) {
-                    return res.status(400).json({error: 'Invalid data'})
+                    return res.status(400).json({error: INVALID_DATA})
                 } else if(error instanceof InvalidUserError) {
                     return res.status(400).json({error: error.errorDescription})
                 }
 
-                return res.status(400).json({error: 'Not found'})
+                return res.status(400).json({error: NOT_FOUND})
             })
 
     } else {
-        res.status(404).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: METHOD_NOT_SUPPORTED })
     }
 }

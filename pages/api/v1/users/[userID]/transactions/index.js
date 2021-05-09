@@ -2,7 +2,7 @@
 import { transactionModeSchema } from '../../../../../../util/joiSchemas'
 import { getUserTransactions, getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
 
-import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED } from '../../../../../../util/constants/response_constants'
+import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED, INVALID_DATA } from '../../../../../../util/constants/response_constants'
 import { ValidationError } from 'joi'
 import { InvalidUserError } from '../../../../../../util/errors'
 
@@ -22,7 +22,7 @@ export default async (req, res) => {
             })
             .catch((error) => {
                 if(error instanceof ValidationError) {
-                    return res.status(400).json({error: 'Invalid data'})
+                    return res.status(400).json({error: INVALID_DATA})
                 } else if(error instanceof InvalidUserError) {
                     return res.status(400).json({error: error.errorDescription})
                 }

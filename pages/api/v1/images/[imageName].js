@@ -1,6 +1,8 @@
 
 import { getImageOnDisk } from "../../../../util/database/imageRepository/localFileImageRepository"
 
+import { METHOD_NOT_SUPPORTED, NOT_FOUND, INTERNAL_SERVER_ERROR } from "../../../../util/constants/response_constants"
+
 export default async (req, res) => {
 
     const { imageName } = req.query
@@ -15,13 +17,13 @@ export default async (req, res) => {
 
             .catch((error) => {
                 if (error.code === 'ENOENT') {
-                    return res.status(500).send({error: 'File not found'})
+                    return res.status(500).send({error: NOT_FOUND})
                 }
                 console.error(error)
-                return res.status(500).send({error: 'Internal Server Error'})
+                return res.status(500).send({error: INTERNAL_SERVER_ERROR})
             })
 
     } else {
-        res.status(404).json({ error: `${req.method} is not supported` })
+        res.status(404).json({ error: METHOD_NOT_SUPPORTED })
     }
 }
