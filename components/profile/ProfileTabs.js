@@ -13,9 +13,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 export const ProfileTabs = (props) => {
 
     const [ session, loading ] = useSession() 
-    //const { images } = props.images
 
-    console.log('sda', props)
     const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
 
     // const { images, imagesError } = useSWR(
@@ -33,9 +31,6 @@ export const ProfileTabs = (props) => {
 
     if (error) return "An error has occurred.";
     if (!data) return "Loading...";
-    // if(!images) return 'loading...'
-
-    console.log('Images: ', data)
 
     // const { transactions, error } = useSWR(
     //   ["http://localhost:3000/api/v1/users/1/transactions?option=bought", session],
@@ -50,11 +45,6 @@ export const ProfileTabs = (props) => {
     //   }
     // );
     
-    // if(!transactions) return 'loading...'
-
-    // console.log('error: ', error)
-    // console.log('transactions: ', data)
-
     const transactions = null
 
     const totalTransactions = transactions?.length || 0;
@@ -138,24 +128,7 @@ export const ProfileTabs = (props) => {
             {/* My Images Tab */}
 
             <Tab.Pane eventKey="myimages" className="py-4">
-              <Row className="justify-content-between align-items-center pb-4">
-                <Col xs={8} md={6} lg={3} xl={4}>
-
-                {/* TODO: Only show search bar when user has images */}
-
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <FontAwesomeIcon icon={faSearch} />
-                      </InputGroup.Text>
-                      <Form.Control type="text" placeholder="Search" />
-                    </InputGroup>
-
-                </Col>
-                <Col xs={4} md={2} xl={1} className="ps-md-0 text-end">
-                  <UploadButton />
-                </Col>
-              </Row>
-
+              
               {/* <div className="d-flex justify-content-center">
                 <Row>
                   <Col xs={12} className="text-center d-flex">
