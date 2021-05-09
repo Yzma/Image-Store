@@ -12,36 +12,6 @@ export const ProfileTabs = (props) => {
     const { images } = props.images
     console.log('2nd', props.images)
 
-    // const images = [
-    //   {
-    //     title: "Image title",
-    //     description: "This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.",
-    //     imageURL: "https://mdbootstrap.com/img/new/standard/city/041.jpg",
-    //     fileName: "ey9HY9wDL--TEST_FILE - Copy.png"
-    //   },
-  
-    //   {
-    //     title: "Image title",
-    //     description: "Image description",
-    //     imageURL: "https://mdbootstrap.com/img/new/standard/city/042.jpg",
-    //     fileName: "ey9HY9wDL--TEST_FILE - Copy.png"
-    //   },
-  
-    //   {
-    //     title: "Image title",
-    //     description: "Image description",
-    //     imageURL: "https://mdbootstrap.com/img/new/standard/city/043.jpg",
-    //     fileName: "ey9HY9wDL--TEST_FILE - Copy.png"
-    //   },
-  
-    //   {
-    //     title: "Image title",
-    //     description: "Image description",
-    //     imageURL: "http://localhost:3000/api/v1/users/1/images/14.png",
-    //     fileName: "ey9HY9wDL--TEST_FILE - Copy.png"
-    //   }
-    // ]
-
     // TODO: Transaction ID, Photo name, Seller, amount paid, purchase date
     const transactions = [
       {
