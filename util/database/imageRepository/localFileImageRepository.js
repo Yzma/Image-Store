@@ -72,15 +72,13 @@ export function getImages(userID) {
 //https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing 
 // TODO: Return 15 maximum images, and also return total private images
 export function getPublicImages(currentPage = 0) {
-    const publicImages = prisma.image.findMany({
+    return prisma.image.findMany({
         take: MAX_IMAGES_PER_PAGE,
         skip: currentPage * MAX_IMAGES_PER_PAGE,
         where: {
             private: false
         },
     })
-
-    return publicImages
 }
 
 export function getImageOnDisk(imageName) {
