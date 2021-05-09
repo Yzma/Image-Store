@@ -1,16 +1,58 @@
 
+import React, {useState} from 'react';
+
 import { useSession } from 'next-auth/client'
 import useSWR from 'swr'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faEdit, faEllipsisH, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination } from '@themesberg/react-bootstrap';
-import { UploadButton } from '../UploadButton'
+
+import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination, Modal } from '@themesberg/react-bootstrap';
+
+import { Formik } from "formik";
+import Dropzone, {useDropzone} from "react-dropzone";
+
+import * as yup from "yup";
 
 import { ImageDisplayGrid } from '../images/ImageDisplayGrid'
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const ProfileTabs = (props) => {
+
+  const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
+  
+  const files = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+  const FILE_SIZE = 160 * 1024;
+  const SUPPORTED_FORMATS = [
+    "image/jpg",
+    "image/jpeg",
+    "image/gif",
+    "image/png"
+  ];
+  const validationSchema = yup.object().shape({
+    text: yup.string().required("A text is required"),
+    file: yup
+      .mixed()
+      .required("A file is required")
+      .test(
+        "fileSize",
+        "File too large",
+        value => value && value.size <= FILE_SIZE
+      )
+      .test(
+        "fileFormat",
+        "Unsupported Format",
+        value => value && SUPPORTED_FORMATS.includes(value.type)
+      )
+  });
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
 
     const [ session, loading ] = useSession() 
 
@@ -128,12 +170,99 @@ export const ProfileTabs = (props) => {
             {/* My Images Tab */}
 
             <Tab.Pane eventKey="myimages" className="py-4">
-              
-              {/* <div className="d-flex justify-content-center">
+
+              <Row className="justify-content-between align-items-right">
+                <Col xs={8} md={6} lg={3} xl={4}>
+                  <Button variant="primary" onClick={handleShow}>
+                    Upload Images
+                  </Button>
+                </Col>
+              </Row>
+
+              <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Upload Images</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                  <Formik
+                    initialValues={{
+                      files: [],
+                    }}
+
+                    onSubmit={(values) => {
+                      console.log('Values: ', values)
+
+                      const formData = new FormData();
+                      values.files.forEach(element => {
+                        formData.append('images',element);
+                      });
+
+                      fetch('http://localhost:3000/api/v1/users/2/images', {
+                        method: 'POST',
+                        body: formData,
+                      })
+                        .then(response => response.json())
+                        .then(data => {
+                          console.debug('Success:', data);
+
+                        })
+                        .catch((error) => {
+                          console.debug('Error:', error);
+                        })
+                    }}
+
+                    validationSchema={yup.object().shape({
+                      recaptcha: yup.array(),
+                    })}
+
+                    render={({ values, handleSubmit, setFieldValue }) => (
+                      <Form onSubmit={handleSubmit}>
+                        <div className="form-group">
+
+                          <Dropzone onDrop={files => {
+                            setFieldValue("files", files)
+                          }} >
+                            {({ getRootProps, getInputProps, acceptedFiles }) => (
+                              <div className="container">
+                                <div
+                                  {...getRootProps({
+                                    className: 'dropzone',
+                                    onDrop: event => event.stopPropagation()
+                                  })}
+                                >
+                                  <Form.Control name="files" type="input" {...getInputProps()} />
+                                  <p>Drag 'n' drop some files here, or click to select files</p>
+                                </div>
+                                <aside>
+                                  <h4>Files</h4>
+                                  <ul>
+                                    {acceptedFiles.map(file => (
+                                      <li key={file.path}>
+                                        {file.path} - {file.size} bytes
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </aside>
+                              </div>
+                            )}
+                          </Dropzone>
+
+                        </div>
+                        <Button type="submit" variant="primary">Upload</Button>
+                      </Form>
+                    )} />
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+              </Modal>
+
+              {data && data.length == 0 ? <div className="d-flex justify-content-center">
                 <Row>
                   <Col xs={12} className="text-center d-flex">
                     <div>
-                      <Image src={NotFoundImage} className="img-fluid w-75" />
                       <h4 className="text-primary mt-5">
                         No Images Found!
                       </h4>
@@ -143,11 +272,10 @@ export const ProfileTabs = (props) => {
                     </div>
                   </Col>
                 </Row>
-              </div> */}
-
-
+              </div> : null}
 
               <ImageDisplayGrid images={data} />
+
             </Tab.Pane>
 
             {/* Purchased Images Tab */}
@@ -256,3 +384,38 @@ export const ProfileTabs = (props) => {
     </Tab.Container>
   );
 };
+class Thumb extends React.Component {
+  state = {
+    loading: false,
+    thumb: undefined,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.file) { return; }
+
+    this.setState({ loading: true }, () => {
+      let reader = new FileReader();
+
+      reader.onloadend = () => {
+        this.setState({ loading: false, thumb: reader.result });
+      };
+
+      reader.readAsDataURL(nextProps.file);
+    });
+  }
+
+  render() {
+    const { file } = this.props;
+    const { loading, thumb } = this.state;
+
+    if (!file) { return null; }
+
+    if (loading) { return <p>loading...</p>; }
+
+    return (<img src={thumb}
+      alt={file.name}
+      className="img-thumbnail mt-2"
+      height={200}
+      width={200} />);
+  }
+}
