@@ -1,8 +1,7 @@
 
-import prisma from '../../../../../../util/prisma'
 
 import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
-import { getImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
+import { getImages, uploadImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
 
 import { METHOD_NOT_SUPPORTED, NO_AUTHORIZATION, INTERNAL_SERVER_ERROR, FILES_TOO_LARGE, TOO_MANY_FILES, INVALID_FILE_TYPES } from '../../../../../../util/constants/response_constants'
 
@@ -61,41 +60,12 @@ export default async (req, res) => {
                 // After we confirm the user exists and authenticated, let's start uploading.
                 MulterMiddleware(req, res)
             )
-            .then(() => {
+            .then(() => 
 
-                // After multer has finished validating and processing the incoming files, we then create an array of transactions
-                // that will map the files on disk to the database.
-
-                // TODO: Still don't like this... Find out a better way to batch, perhaps just remove the array entirely?
-                const parsedUserID = parseInt(userID)
-                const transactions = []
-
-                for (const newImg of req.files) {
-
-                    const result = prisma.image.create({
-                        data: {
-                            title: newImg.originalname,
-                            fileName: newImg.filename,
-                            fileType: newImg.mimetype,
-                            user: {
-                                connect: {
-                                    id: parsedUserID
-                                }
-                            }
-                        }
-                    })
-
-                    transactions.push(result)
-                }
-
-                return transactions
-
-            }).then((transactions) =>
-
-                // Batch the transactions that we created to map each file into the database
-                prisma.$transaction(transactions)
-
-            ).then((value) => {
+                // Map uploaded files to the database
+                uploadImages(userID, req.files)
+            )
+            .then((value) => {
 
                 // After everything is complete, return that all files were successfully uploaded
                 return res.status(200).json({ success: value })
@@ -106,10 +76,10 @@ export default async (req, res) => {
                 // The error handling here is a little weird due to how Multer does it's error handling.
                 // This catches all the errors that are most likely to happen, and returns a 500 if it's a different error.
                 if (error instanceof MulterError) {
-                    if (error.code == 4) {
-                        return res.status(400).json({ error: FILES_TOO_LARGE })
-                    } else if (error.code == 5) {
+                    if (error.code == 'LIMIT_FILE_COUNT') {
                         return res.status(400).json({ error: TOO_MANY_FILES })
+                    } else if (error.code == 'LIMIT_FILE_SIZE') {
+                        return res.status(400).json({ error: FILES_TOO_LARGE })
                     }
                 } else if (error instanceof InvalidFileTypeError) {
                     return res.status(400).json({ error: INVALID_FILE_TYPES })
