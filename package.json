@@ -32,6 +32,7 @@
     "sass": "^1.32.11",
     "simplebar-react": "^2.3.2",
     "superjson": "^1.7.4",
+    "swr": "^0.5.6",
     "yup": "^0.32.9"
   },
   "engines": {
