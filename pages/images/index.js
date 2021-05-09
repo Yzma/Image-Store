@@ -15,8 +15,7 @@ const PublicImageSearch = (props) => {
 
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
-          <h4>Image Search</h4>
-          <p className="mb-0"><b>TODO: Change this 15</b> public photos available</p>
+          <h4>Public Images</h4>
         </div>
       </div>
 
