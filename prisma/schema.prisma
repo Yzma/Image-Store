@@ -7,6 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Deal {
+  productID         Int      @map("product_id") 
+  product           Product  @relation(fields: [productID], references: [id])
+
+  discountPrice     Decimal  @map("discount_price")
+
+  discountStartDate DateTime @map("discount_start_date")
+  discountEndDate   DateTime @map("discount_end_date")
+
+  @@unique([productID])
+  @@index([productID])
+  @@map("deals")
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+
+  dateCreated  DateTime @default(now()) @map("date_created")
+  currentPrice Decimal  @map("current_price")
+
+  imageID      Int      @map("image_id")
+  image        Image    @relation(fields: [imageID], references: [id])
+
+  deals        Deal[]
+
+  @@unique([imageID])
+  @@index([imageID])
+  @@map("products")
+}
+
 model Transaction {
   id            Int      @id @default(autoincrement())
   datePurchased DateTime @default(now()) @map("date_purchased")
@@ -39,6 +69,7 @@ model Image {
   user         User     @relation(fields: [userID], references: [id])
 
   transactions Transaction[]
+  products     Product[]
 
   @@unique([id, userID])
   @@index([title, description, userID])
