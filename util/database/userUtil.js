@@ -4,6 +4,11 @@ import { getSession } from 'next-auth/client'
 import { InvalidUserError } from "../errors"
 import * as RESPONSE_ERRORS from "../constants/response_constants"
 
+export const TRANSACTION_QUERY = {
+    BOUGHT: 'bought',
+    SOLD: 'sold'
+}
+
 export function getUser(userID) {
     return prisma.user.findFirst({
         where: {
@@ -89,13 +94,13 @@ export function getUserTransactions(userID, option) {
 }
 
 function getTransactionQueryByOption(userID, option) {
-    if(option.equals === "bought") {
+    if(option.equals === TRANSACTION_QUERY.BOUGHT) {
         return {
             where: {
                 buyerUserID: userID
             }
         }
-    } else if(option.equals === "sold") {
+    } else if(option.equals === TRANSACTION_QUERY.SOLD) {
         return {
             where: {
                 sellerUserID: userID
