@@ -85,16 +85,7 @@ export default async (req, res) => {
     // DELETE image by ID - TODO: Figure out how to return API code for this
     } else if(req.method === "DELETE") {
 
-        return await getAuthenticatedUserFromRequest(req)
-
-            // TODO: Make this prettier
-            .then((data) => {
-                if(data.id !== userID) {
-                    throw new InvalidUserError(NO_AUTHORIZATION)
-                }
-
-                return data
-            })
+        return await getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
             .then(() => deleteImage(userID, imageID))
             .then((data) => res.status(200).json(data))
             .catch((error) => {

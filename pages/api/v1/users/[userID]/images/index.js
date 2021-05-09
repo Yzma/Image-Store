@@ -45,16 +45,7 @@ export default async (req, res) => {
     // POST request to upload image
     } else if (req.method === "POST") {
 
-        return await getAuthenticatedUserFromRequest(req)
-            .then((data) => {
-
-                // Check if the user is who it claims to be
-                if(data.id != userID) {
-                    throw new InvalidUserError(NO_AUTHORIZATION)
-                }
-
-                return data
-            })
+        return await getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
             .then(() =>
 
                 // After we confirm the user exists and authenticated, let's start uploading.

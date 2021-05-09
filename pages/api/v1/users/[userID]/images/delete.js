@@ -16,7 +16,7 @@ export default async (req, res) => {
         const { userID, ids } = req.body
 
         return await imageDeleteSchema.validateAsync({ ids: ids })
-            .then(() => getAuthenticatedUserFromRequest(req))
+            .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))
             .then(() => deleteImages(userID, ids))
             .then((data) => res.status(200).json(data))
             .catch((error) => {
