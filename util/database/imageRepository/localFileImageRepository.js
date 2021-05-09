@@ -59,6 +59,17 @@ export function getImageById(imageID) {
     })
 }
 
+export function getAllImages(userID) {
+    
+    const parsedID = parseInt(userID)
+
+    return prisma.image.findMany({
+        where: {
+            userID: parsedID
+        }
+    })
+}
+
 export function getImages(userID, visibilityMode) {
     
     const parsedID = parseInt(userID)
