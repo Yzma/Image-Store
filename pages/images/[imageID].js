@@ -99,35 +99,6 @@ export async function getServerSideProps(context) {
                 }
             }
         })
-
-    // const requestedImage = await getImageById(context.params.imageID)
-
-    // if (!requestedImage) {
-    //     return {
-    //         props: {
-    //             error: {
-    //                 code: ErrorCode.NOT_FOUND
-    //             }
-    //         }
-    //     }
-    // }
-
-    // // Check permissions
-    // if (false) {
-    //     return {
-    //         props: {
-    //             error: {
-    //                 code: ErrorCode.NO_AUTHORIZATION
-    //             }
-    //         }
-    //     }
-    // }
-
-    // return {
-    //     props: {
-    //         requestedImage: requestedImage
-    //     }
-    // }
 }
 
 export default ViewImage
