@@ -7,7 +7,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faImages, faHandHoldingUsd, faSignOutAlt, faTimes, faHome } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 
-export const Sidebar = (props = {}) => {
+export const Sidebar = (props) => {
 
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
@@ -53,7 +53,7 @@ export const Sidebar = (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Home" icon={faHome} link={'/'}/>
+              <NavItem title="Home" icon={faHome} link={props.user ? `/users/${props.user.id}` : '/home'}/>
               <NavItem title="Search Images" icon={faImages} link={'/images'}/>
 
               <Dropdown.Divider className="my-3 border-indigo" />
