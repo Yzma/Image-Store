@@ -15,7 +15,7 @@ const ViewImage = (props) => {
                 <Container className="px-0">
 
                     {props.error ?
-                    
+
                         <CannotViewImageError error={props.error} />
 
                         :
@@ -23,7 +23,7 @@ const ViewImage = (props) => {
                         <Row>
                             <Col >
                                 <Card>
-                                    <Card.Img variant="top" src="https://mdbootstrap.com/img/new/standard/city/041.jpg" />
+                                    <Card.Img variant="top" src={`http://localhost:3000/api/v1/users/${props.requestedImage.userID}/images/${props.requestedImage.id}`} />
                                 </Card>
                             </Col>
 
@@ -84,34 +84,50 @@ const ViewImage = (props) => {
 
 export async function getServerSideProps(context) {
 
-    const requestedImage = await getImageById(context.params.imageID)
-
-    if (!requestedImage) {
-        return {
-            props: {
+    return await getImageById(context.params.imageID)
+        .then((image) => {
+            return {
+                props: {
+                    requestedImage: image
+                }
+            }
+        })
+        .catch((error) => {
+            return {
                 error: {
                     code: ErrorCode.NOT_FOUND
                 }
             }
-        }
-    }
+        })
 
-    // Check permissions
-    if (false) {
-        return {
-            props: {
-                error: {
-                    code: ErrorCode.NO_AUTHORIZATION
-                }
-            }
-        }
-    }
+    // const requestedImage = await getImageById(context.params.imageID)
 
-    return {
-        props: {
-            requestedImage: requestedImage
-        }
-    }
+    // if (!requestedImage) {
+    //     return {
+    //         props: {
+    //             error: {
+    //                 code: ErrorCode.NOT_FOUND
+    //             }
+    //         }
+    //     }
+    // }
+
+    // // Check permissions
+    // if (false) {
+    //     return {
+    //         props: {
+    //             error: {
+    //                 code: ErrorCode.NO_AUTHORIZATION
+    //             }
+    //         }
+    //     }
+    // }
+
+    // return {
+    //     props: {
+    //         requestedImage: requestedImage
+    //     }
+    // }
 }
 
 export default ViewImage

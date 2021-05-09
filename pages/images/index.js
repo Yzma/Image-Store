@@ -5,35 +5,10 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, InputGroup, Card, Image } from '@themesberg/react-bootstrap';
 
 import { ImageDisplayGrid } from '../../components/images/ImageDisplayGrid'
+import { getPublicImages } from '../../util/database/imageRepository/localFileImageRepository';
 
 // Public image searching
-const PublicImageSearch = () => {
-
-  const images = [
-    {
-      title: "Image title",
-      description: "This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.",
-      imageURL: "https://mdbootstrap.com/img/new/standard/city/041.jpg"
-    },
-
-    {
-      title: "Image title",
-      description: "Image description",
-      imageURL: "https://mdbootstrap.com/img/new/standard/city/042.jpg"
-    },
-
-    {
-      title: "Image title",
-      description: "Image description",
-      imageURL: "https://mdbootstrap.com/img/new/standard/city/043.jpg"
-    },
-
-    {
-      title: "Image title",
-      description: "Image description",
-      imageURL: "https://mdbootstrap.com/img/new/standard/city/044.jpg"
-    }
-  ]
+const PublicImageSearch = (props) => {
 
   return (
     <PageTemplate>
@@ -56,10 +31,32 @@ const PublicImageSearch = () => {
         </Col>
       </Row>
 
-      <ImageDisplayGrid images={images}/>
+      <ImageDisplayGrid images={props.publicImages}/>
 
     </PageTemplate>
   );
 };
+
+export async function getServerSideProps(context) {
+
+  const currentPage = parseInt(context.query.page) || 0
+  return await getPublicImages(currentPage)
+    .then((images) => {
+      return {
+        props: {
+          publicImages: images
+        }
+      }
+    })
+    .catch((error) => {
+      console.error('???')
+      return {
+        props: {
+          error: true
+        }
+      }
+    })
+}
+
 
 export default PublicImageSearch
