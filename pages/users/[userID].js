@@ -10,14 +10,14 @@ import { getUser } from '../../util/database/userUtil'
 const UserProfile = (props) => {
 
     return (
-        <PageTemplate>
+        <PageTemplate user={props.user}>
             <div className="py-4">
                 <Row>
                     <Col xs={12} xl={3}>
-                    <ProfileCard userInformation={props.user} />
+                        <ProfileCard userInformation={props.user} />
                     </Col>
                     <Col xs={12} xl={8}>
-                    <ProfileTabs user={props.user}/>
+                        <ProfileTabs user={props.user}/>
                     </Col>
                 </Row>   
             </div>

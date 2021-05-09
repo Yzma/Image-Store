@@ -9,7 +9,7 @@ export const PageTemplate = (props) => {
     <>
       <main className="content">
         <Sidebar />
-        <Header />
+        <Header user={props.user} />
           {props.children}
         <Footer />
       </main>

@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Button, Image, Navbar, Dropdown, Container } from '@themesberg/react-bootstrap';
 
-import Profile3 from "../public/assets/img/team/profile-picture-3.jpg";
-
 export const Header = (props) => {
   const [ session, loading ] = useSession()
+
+  if(loading) return ''
 
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-2">
@@ -32,14 +32,8 @@ export const Header = (props) => {
                     </Dropdown.Item>
 
                     <Dropdown.Divider />
-                      <Dropdown.Item className="fw-bold">
+                      <Dropdown.Item href={`/users/${props.user.id}`} className="fw-bold">
                         Your Profile
-                      </Dropdown.Item>
-                      <Dropdown.Item className="fw-bold">
-                        Your Images
-                      </Dropdown.Item>
-                      <Dropdown.Item className="fw-bold">
-                        Your Balance
                       </Dropdown.Item>
                     <Dropdown.Divider />
 
