@@ -13,6 +13,8 @@ import { IMAGE_DESTINATION_FOLDER, MAX_IMAGES_PER_PAGE } from '../../constants'
 
 import { unlink, readFile } from 'fs';
 
+import { cacheContainer } from '../cache/cacheContainer'
+
 export function getImage(userID, imageID) {
 
     const requestedImage = prisma.image.findFirst({
@@ -57,15 +59,35 @@ export function getImageById(imageID) {
     })
 }
 
-export function getImages(userID) {
+export function getImages(userID, visibilityMode) {
+    
+    const parsedID = parseInt(userID)
 
-    return prisma.image.findMany({
-        where: {
-            user: {
-                id: parseInt(userID)
+    const visibilityQuery = {
+        PUBLIC: {
+            where: {
+                userID: parsedID,
+                private: false
+            },
+        },
+
+        PRIVATE: {
+            where: {
+                userID: parsedID,
+                private: true
+            }
+        },
+
+        ALL: {
+            where: {
+                userID: parsedID
             }
         }
-    })
+    }
+
+    const queryMode = visibilityQuery[visibilityMode] || visibilityQuery.PUBLIC
+
+    return prisma.image.findMany(queryMode)
 }
 
 //https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing 
@@ -107,6 +129,7 @@ export async function uploadImages(userID, images) {
 
     const parsedUserID = parseInt(userID)
     const data = images.map((value) => {
+        console.log(value)
         return {
             title: value.originalname,
             fileName: value.filename,
