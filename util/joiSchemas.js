@@ -1,6 +1,8 @@
 
 import Joi from "joi";
 
+import { MAX_IMAGES_PER_PAGE } from "./constants";
+
 const CLEAN_NAME_REGEX = /^[a-zA-Z0-9\-]+$/
 
 const VALID_LABEL_NAME = Joi.string()
@@ -35,13 +37,9 @@ export const userBalanceSchema = Joi.object({
         .less(1000)
 });
 
-// const schema = Joi.array().max(10);
-// const schema = Joi.array().items(Joi.string().valid('not allowed').forbidden(), Joi.string()); 
-// array may contain strings, but none of those strings can match 'not allowed'
-
 export const imageDeleteSchema = Joi.object({
     ids: Joi.array()
-        .max(10)
+        .max(MAX_IMAGES_PER_PAGE)
         .items(Joi.number().integer().greater(0))
         .required()
 });
