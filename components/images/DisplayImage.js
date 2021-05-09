@@ -8,10 +8,11 @@ export const DisplayImage = (props) => {
   const { id, title, private: isPrivate, description, imageURL, fileName } = props.image
 
   const actualImageURL = `http://localhost:3000/api/v1/images/${fileName}`
+  const pageViewURL = `http://localhost:3000/images/${id}`
   return (
     <Col>
       <Card className="h-100">
-        <a href={actualImageURL}><Image src={actualImageURL} className="card-img-top" /></a>
+        <a href={pageViewURL}><Image src={actualImageURL} className="card-img-top" /></a>
         <Card.Body>
           <Card.Title>
             {title} {isPrivate ? <FontAwesomeIcon icon={faLock}/> : null}
