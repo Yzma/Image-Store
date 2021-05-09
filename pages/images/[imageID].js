@@ -9,6 +9,8 @@ import { ErrorCode } from '../../util/constants';
 
 const ViewImage = (props) => {
 
+    const { fileName } = props.requestedImage
+
     return (
         <PageTemplate>
             <article>
@@ -23,7 +25,7 @@ const ViewImage = (props) => {
                         <Row>
                             <Col >
                                 <Card>
-                                    <Card.Img variant="top" src={`http://localhost:3000/api/v1/users/${props.requestedImage.userID}/images/${props.requestedImage.id}`} />
+                                    <Card.Img variant="top" src={`http://localhost:3000/api/v1/images/${fileName}`} />
                                 </Card>
                             </Col>
 
