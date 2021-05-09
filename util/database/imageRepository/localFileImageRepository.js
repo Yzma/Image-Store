@@ -91,6 +91,18 @@ export function getImageOnDisk(imageName) {
     });
 }
 
+export function deleteImageOnDisk(imageFile) {
+    return new Promise((resolve, reject) => {
+        return unlink(`${IMAGE_DESTINATION_FOLDER}/${imageFile}`, (error) => {
+            if(error) {
+                return reject(error);
+            }
+    
+            return resolve(imageFile)
+        })
+    })
+}
+
 export async function uploadImages(userID, images) {
 
 }
@@ -153,31 +165,12 @@ export async function deleteImages(userID, imageIDs) {
             console.log(deletedRowsCount)
 
             if (deletedRowsCount.count > 0) {
-                return Promise.all(
-                    retrievedImageIDs.map(
-                        file =>
-                            
-                            new Promise((res, rej) => {
-                                try {
-                                    console.log('File: ', file)
-                                    //unlink(`${IMAGE_DESTINATION_FOLDER}/${data.fileName}`)
-                                    unlink(`${IMAGE_DESTINATION_FOLDER}/${file.fileName}`, err => {
-                                        if (err) throw err;
-                                        console.log(`${file.fileName} was deleted`);
-                                        res()
-                                    });
-
-                                } catch (err) {
-                                    console.error(err);
-                                    rej(err);
-                                }
-                            })
-                    )
-                )
+                return Promise.all(retrievedImageIDs.map((imageFile) => {
+                    return deleteImageOnDisk(imageFile.fileName)
+                }))
             }
-
-            return null
-        })
+            return deletedRowsCount
+    })
 }
 
 export async function updateImage(userID, imageID, updatedSettings) {
