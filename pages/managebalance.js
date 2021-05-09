@@ -5,10 +5,11 @@ import { Col, Row, Form, Container, Button, Alert } from '@themesberg/react-boot
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { getUserBySession } from '../util/database/userUtil';
+import { getAuthenticatedUserFromRequest } from '../util/database/userUtil';
 
 const ManageBalance = (props) => {
 
+  const [notSignedIn, setNotSignedIn] = useState(props.notSignedIn || false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
@@ -34,8 +35,14 @@ const ManageBalance = (props) => {
         .then(response => response.json())
         .then(data => {
           console.debug('Success:', data);
-          balanceView.current = parseInt(data.balance)
-          setShowSuccessAlert(true)
+
+          if(data.error) {
+            setShowErrorAlert(true)
+          } else {
+            balanceView.current = parseInt(data.balance)
+            setShowSuccessAlert(true)
+          }
+
         })
         .catch((error) => {
           console.debug('Error:', error);
@@ -91,7 +98,7 @@ const ManageBalance = (props) => {
             <div className="account-border d-flex justify-content-between" />
 
             <Form.Group className="py-3">
-                <Button type="submit">Update Balance</Button>
+                <Button type="submit" disabled={notSignedIn}>Update Balance</Button>
             </Form.Group>
           </Form>
         </Container>
@@ -100,26 +107,23 @@ const ManageBalance = (props) => {
   );
 };
 
-// TODO: Come back to this:
-//   - Figure out decimal serialization
-//   - Fetch data more efficiently
-//   - Handle user visiting page not signed in - Right now it only assumes the user is signed in
 export async function getServerSideProps(context) {
 
-  const user = await getUserBySession(context)
-
-  if(!user) {
-    return {
-      props: {
+  return await getAuthenticatedUserFromRequest(context.req)
+    .then((data) => {
+      return {
+        props: {
+          balance: parseInt(data.balance)
+        }
       }
-    }
-  }
- 
-  return {
-    props: {
-      balance: JSON.parse(JSON.stringify(user.balance)) 
-    }
-  }
+    })
+    .catch((error) => {
+      return {
+        props: {
+          notSignedIn: true
+        }
+      }
+    })
 }
 
 
