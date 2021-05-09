@@ -7,22 +7,15 @@ import { ProfileTabs } from './ProfileTabs'
 
 export const ProfileIndexPage = (props) => {
 
-  const testData = {
-    name: "Name Here",
-    money: 12.00
-  }
-
-  console.log('Profile Props: ', props)
-
   return (
     <PageTemplate>
       <div className="py-4">
         <Row>
           <Col xs={12} xl={3}>
-            <ProfileCard userInformation={testData} />
+            <ProfileCard userInformation={props.user} />
           </Col>
           <Col xs={12} xl={8}>
-            <ProfileTabs images={props.images}/>
+            <ProfileTabs user={props.user} images={props.images}/>
           </Col>
         </Row>   
       </div>
