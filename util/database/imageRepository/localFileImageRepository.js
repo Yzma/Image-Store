@@ -105,6 +105,19 @@ export function deleteImageOnDisk(imageFile) {
 
 export async function uploadImages(userID, images) {
 
+    const parsedUserID = parseInt(userID)
+    const data = images.map((value) => {
+        return {
+            title: value.originalname,
+            fileName: value.filename,
+            fileType: value.mimetype,
+            userID: parsedUserID
+        }
+    })
+
+    return prisma.image.createMany({
+        data: data
+    })
 }
 
 export function deleteImage(userID, imageID) {
@@ -115,7 +128,7 @@ export function deleteImage(userID, imageID) {
                 userID: parseInt(userID)
             }
         }
-    }).then((data) => unlink(`${IMAGE_DESTINATION_FOLDER}/${data.fileName}`))
+    }).then((data) => deleteImageOnDisk(data.fileName))
 }
 
 export async function deleteImages(userID, imageIDs) {
@@ -161,15 +174,12 @@ export async function deleteImages(userID, imageIDs) {
         .then((data) => {
             const [retrievedImageIDs, deletedRowsCount] = data
 
-            console.log(retrievedImageIDs)
-            console.log(deletedRowsCount)
-
             if (deletedRowsCount.count > 0) {
                 return Promise.all(retrievedImageIDs.map((imageFile) => {
                     return deleteImageOnDisk(imageFile.fileName)
                 }))
             }
-            return deletedRowsCount
+            return null
     })
 }
 
