@@ -3,7 +3,7 @@
 import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
 import { getImages, uploadImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
 
-import { METHOD_NOT_SUPPORTED, NO_AUTHORIZATION, INTERNAL_SERVER_ERROR, FILES_TOO_LARGE, TOO_MANY_FILES, INVALID_FILE_TYPES } from '../../../../../../util/constants/response_constants'
+import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, FILES_TOO_LARGE, TOO_MANY_FILES, INVALID_FILE_TYPES } from '../../../../../../util/constants/response_constants'
 
 import { MulterMiddleware, InvalidFileTypeError } from '../../../../../../util/middleware/multer'
 import { InvalidUserError } from '../../../../../../util/errors'
@@ -12,30 +12,10 @@ import { MulterError } from 'multer'
 export default async (req, res) => {
 
     // TODO: Comments
-    const { userID } = req.query
+    const { userID, visibility } = req.query
 
     if (req.method === "GET") {
-
-        // TODO: Check privacy
-        //     {
-        //         where: {
-        //             user: {
-        //                 id: parseInt(userID)
-        //             }
-        //         }
-        //     }
-
-        //     :
-
-        //     {
-        //         where: {
-        //             user: {
-        //                 id: parseInt(userID)
-        //             },
-        //             private: false
-        //         }
-        //     }
-        return await getImages(userID)
+        return await getImages(userID, visibility)
             .then((data) => res.status(200).json(data))
             .catch((error) => {
                 console.error(error)
