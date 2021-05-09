@@ -1,10 +1,10 @@
 
-import { getSession } from 'next-auth/client'
-
+import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
 import { deleteImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
 import { imageDeleteSchema } from '../../../../../../util/joiSchemas'
 
 import { ValidationError } from 'joi'
+import { InvalidUserError } from '../../../../../../util/errors'
 
 export default async (req, res) => {
 
@@ -14,12 +14,16 @@ export default async (req, res) => {
         const { userID, ids } = req.body
 
         return await imageDeleteSchema.validateAsync({ ids: ids })
+            .then(() => getAuthenticatedUserFromRequest(req))
             .then(() => deleteImages(userID, ids))
             .then((data) => res.status(200).json(data))
             .catch((error) => {
                 if(error instanceof ValidationError) {
                     return res.status(400).json({error: 'Invalid data'})
+                } else if(error instanceof InvalidUserError) {
+                    return res.status(400).json({error: error.errorDescription})
                 }
+
                 return res.status(400).json({error: 'Not found'})
             })
 
