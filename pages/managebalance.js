@@ -60,6 +60,10 @@ const ManageBalance = (props) => {
               <p className="mb-0">
                 This page is used to edit your balance to test buying images. The page makes a <kbd>PATCH</kbd> request to the <kbd>/api/changebalance</kbd> route to update the users balance.
                 There is not auth checks in this route as it's only purpose is to edit the users balance to purchase images.
+                <br />
+
+                <a className="text-danger">NOTE: Make sure you are signed in to begin making changes to your balance.</a>
+                
               </p>
             </Col>
           </Row>
@@ -100,6 +104,7 @@ const ManageBalance = (props) => {
             <Form.Group className="py-3">
                 <Button type="submit" disabled={notSignedIn}>Update Balance</Button>
             </Form.Group>
+            {notSignedIn ? <p className="text-danger">You must be signed in start updating your balance.</p> : null}
           </Form>
         </Container>
       </article>
