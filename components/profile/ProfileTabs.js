@@ -6,6 +6,9 @@ import useSWR from 'swr'
 
 import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination, Modal } from '@themesberg/react-bootstrap';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+
 import { Formik } from "formik";
 import Dropzone, {useDropzone} from "react-dropzone";
 
@@ -171,14 +174,21 @@ export const ProfileTabs = (props) => {
 
             <Tab.Pane eventKey="myimages" className="py-4">
 
-              <Row className="justify-content-between align-items-right">
-                <Col xs={8} md={6} lg={3} xl={4}>
-                  <Button variant="primary" onClick={handleShow}>
-                    Upload Images
-                  </Button>
-                </Col>
-              </Row>
+              <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-4">
+                <Form className="navbar-search">
+                  <Form.Group id="topbarSearch">
+                    <InputGroup className="input-group-merge search-bar">
+                      <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
+                      <Form.Control type="text" placeholder="Search" />
+                    </InputGroup>
+                  </Form.Group>
+                </Form>
 
+                <Button variant="primary" className="me-2" onClick={handleShow}>
+                  <FontAwesomeIcon icon={faPlus} className="me-1" /> Upload Images
+                </Button>
+              </div>
+   
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Upload Images</Modal.Title>
