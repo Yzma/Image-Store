@@ -9,6 +9,7 @@ import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesb
 
 export const Sidebar = (props) => {
 
+  const [ session, loading ] = useSession()
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
 
@@ -53,7 +54,7 @@ export const Sidebar = (props) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Home" icon={faHome} link={props.user ? `/users/${props.user.id}` : '/home'}/>
+              <NavItem title="Home" icon={faHome} link={`/users/${session.user.id}`}/>
               <NavItem title="Search Images" icon={faImages} link={'/images'}/>
 
               <Dropdown.Divider className="my-3 border-indigo" />
