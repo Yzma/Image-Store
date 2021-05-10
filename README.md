@@ -81,7 +81,7 @@ Clicking on your profile picture at the top right allows you to go to your profi
 ### Public Images page (`/images`)
 Public images view page. This page shows all the public images in the database to the user. Try uploading some images to on your profile and you will see them here.
 
-### Profile page (`/[userID]`)
+### Profile page (`/users/[userID]`)
 To go to your profile, click your profile picture at the top right and click “Your Profile”. Or type (http://localhost:3000/users/1)
 Once on your profile, go to the "My Images" tab and click "Upload Images". From here you can upload up to 12 files at a time.
 
