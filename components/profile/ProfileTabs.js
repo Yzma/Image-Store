@@ -6,6 +6,9 @@ import useSWR from 'swr'
 
 import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination, Modal } from '@themesberg/react-bootstrap';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+
 import { Formik } from "formik";
 import Dropzone, {useDropzone} from "react-dropzone";
 
@@ -100,6 +103,8 @@ export const ProfileTabs = (props) => {
       console.log(amount)
       console.log(datePurchased)
 
+      
+
       return (
         <tr>
           <td>
@@ -171,14 +176,21 @@ export const ProfileTabs = (props) => {
 
             <Tab.Pane eventKey="myimages" className="py-4">
 
-              <Row className="justify-content-between align-items-right">
-                <Col xs={8} md={6} lg={3} xl={4}>
-                  <Button variant="primary" onClick={handleShow}>
-                    Upload Images
-                  </Button>
-                </Col>
-              </Row>
+              <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-4">
+                <Form className="navbar-search">
+                  <Form.Group id="topbarSearch">
+                    <InputGroup className="input-group-merge search-bar">
+                      <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
+                      <Form.Control type="text" placeholder="Search" />
+                    </InputGroup>
+                  </Form.Group>
+                </Form>
 
+                <Button variant="primary" className="me-2" onClick={handleShow}>
+                  <FontAwesomeIcon icon={faPlus} className="me-1" /> Upload Images
+                </Button>
+              </div>
+   
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Upload Images</Modal.Title>
@@ -195,10 +207,12 @@ export const ProfileTabs = (props) => {
 
                       const formData = new FormData();
                       values.files.forEach(element => {
-                        formData.append('images',element);
+                        formData.append('images', element);
                       });
 
-                      fetch('http://localhost:3000/api/v1/users/2/images', {
+                      console.log('Your session ', session)
+
+                      fetch(`http://localhost:3000/api/v1/users/${session.user.id}/images`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -235,7 +249,7 @@ export const ProfileTabs = (props) => {
                                   <p>Drag 'n' drop some files here, or click to select files</p>
                                 </div>
                                 <aside>
-                                  <h4>Files</h4>
+                                  <h4 className="text-left pt-3">{acceptedFiles ? `Files (${acceptedFiles.length})` : null}</h4>
                                   <ul>
                                     {acceptedFiles.map(file => (
                                       <li key={file.path}>
@@ -249,14 +263,13 @@ export const ProfileTabs = (props) => {
                           </Dropzone>
 
                         </div>
-                        <Button type="submit" variant="primary">Upload</Button>
+                        <div className="d-flex justify-content-end">
+                          <Button type="submit" variant="primary">Confirm Upload</Button>
+                        </div>
                       </Form>
                     )} />
 
                 </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>Close</Button>
-                </Modal.Footer>
               </Modal>
 
               {data && data.length == 0 ? <div className="d-flex justify-content-center">
@@ -384,38 +397,3 @@ export const ProfileTabs = (props) => {
     </Tab.Container>
   );
 };
-class Thumb extends React.Component {
-  state = {
-    loading: false,
-    thumb: undefined,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.file) { return; }
-
-    this.setState({ loading: true }, () => {
-      let reader = new FileReader();
-
-      reader.onloadend = () => {
-        this.setState({ loading: false, thumb: reader.result });
-      };
-
-      reader.readAsDataURL(nextProps.file);
-    });
-  }
-
-  render() {
-    const { file } = this.props;
-    const { loading, thumb } = this.state;
-
-    if (!file) { return null; }
-
-    if (loading) { return <p>loading...</p>; }
-
-    return (<img src={thumb}
-      alt={file.name}
-      className="img-thumbnail mt-2"
-      height={200}
-      width={200} />);
-  }
-}

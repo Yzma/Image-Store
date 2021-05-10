@@ -15,6 +15,12 @@ const NextAuthProvider = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_ID_SECRET,
     }),
   ],
+  callbacks: {
+    async session(session, token) {
+      session.user.id = token.id
+      return session
+    }
+  },
 
   adapter: Adapters.Prisma.Adapter({ prisma }),
 })

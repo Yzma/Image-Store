@@ -32,7 +32,7 @@ export const Header = (props) => {
                     </Dropdown.Item>
 
                     <Dropdown.Divider />
-                      <Dropdown.Item href={props.user ? `/users/${props.user.id}` : '/'} className="fw-bold">
+                      <Dropdown.Item href={`/users/${session.user.id}`} className="fw-bold">
                         Your Profile
                       </Dropdown.Item>
                     <Dropdown.Divider />

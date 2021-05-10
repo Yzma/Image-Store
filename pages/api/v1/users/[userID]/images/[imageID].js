@@ -31,10 +31,10 @@ export default async (req, res) => {
 
                 return data
             })
-            .then(() => getAuthenticatedUserFromRequest(req))
-            .then(data => { 
-                return data.id == userID ? res.status(200).send(data) : res.status(200).send({ error: NO_AUTHORIZATION }) 
-            })
+            .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))
+            .then(data =>
+                res.status(200).send(data) 
+            )
             .catch((error) => {
 
                 if(error.returnAlready) {
@@ -55,18 +55,7 @@ export default async (req, res) => {
         const { title, description, private: isPrivate } = req.body
 
         return await imageSchema.validateAsync({ title: title, description: description, private: isPrivate })
-            .then(() => getAuthenticatedUserFromRequest(req))
-
-            // TODO: Make this prettier
-            .then((data) => {
-                if(data.id !== userID) {
-                    throw new InvalidUserError(NO_AUTHORIZATION)
-                }
-
-                return data
-            })
-
-            
+            .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))      
             .then(() => updateImage(userID, imageID,  { title, description, private: isPrivate }))
             .then((data) => res.status(200).json(data))
             .catch((error) => {
