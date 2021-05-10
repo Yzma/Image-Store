@@ -103,6 +103,8 @@ export const ProfileTabs = (props) => {
       console.log(amount)
       console.log(datePurchased)
 
+      
+
       return (
         <tr>
           <td>
@@ -205,10 +207,12 @@ export const ProfileTabs = (props) => {
 
                       const formData = new FormData();
                       values.files.forEach(element => {
-                        formData.append('images',element);
+                        formData.append('images', element);
                       });
 
-                      fetch('http://localhost:3000/api/v1/users/2/images', {
+                      console.log('Your session ', session)
+
+                      fetch(`http://localhost:3000/api/v1/users/${session.user.id}/images`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -245,7 +249,7 @@ export const ProfileTabs = (props) => {
                                   <p>Drag 'n' drop some files here, or click to select files</p>
                                 </div>
                                 <aside>
-                                  <h4>Files</h4>
+                                  <h4 className="text-left pt-3">{acceptedFiles ? `Files (${acceptedFiles.length})` : null}</h4>
                                   <ul>
                                     {acceptedFiles.map(file => (
                                       <li key={file.path}>
@@ -259,14 +263,13 @@ export const ProfileTabs = (props) => {
                           </Dropzone>
 
                         </div>
-                        <Button type="submit" variant="primary">Upload</Button>
+                        <div className="d-flex justify-content-end">
+                          <Button type="submit" variant="primary">Confirm Upload</Button>
+                        </div>
                       </Form>
                     )} />
 
                 </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>Close</Button>
-                </Modal.Footer>
               </Modal>
 
               {data && data.length == 0 ? <div className="d-flex justify-content-center">
@@ -394,38 +397,3 @@ export const ProfileTabs = (props) => {
     </Tab.Container>
   );
 };
-class Thumb extends React.Component {
-  state = {
-    loading: false,
-    thumb: undefined,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.file) { return; }
-
-    this.setState({ loading: true }, () => {
-      let reader = new FileReader();
-
-      reader.onloadend = () => {
-        this.setState({ loading: false, thumb: reader.result });
-      };
-
-      reader.readAsDataURL(nextProps.file);
-    });
-  }
-
-  render() {
-    const { file } = this.props;
-    const { loading, thumb } = this.state;
-
-    if (!file) { return null; }
-
-    if (loading) { return <p>loading...</p>; }
-
-    return (<img src={thumb}
-      alt={file.name}
-      className="img-thumbnail mt-2"
-      height={200}
-      width={200} />);
-  }
-}
