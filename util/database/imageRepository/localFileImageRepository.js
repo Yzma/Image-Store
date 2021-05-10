@@ -113,6 +113,36 @@ export function getPublicImages(currentPage = 0) {
     })
 }
 
+export function getPaginationResultsFromImages(currentPage, images) {
+    const page = parseInt(currentPage) || 0;
+    const limit = MAX_IMAGES_PER_PAGE
+    const imagesLength = images.length
+
+    const result = {
+        forward: false,
+        back: false,
+        invalid: false
+    }
+
+    if(page == 0) {
+        if(imagesLength >= limit) {
+            result.forward = true
+        }
+    }  
+    
+    if(page > 0) {
+        result.back = true
+    }
+
+    return new Promise((resolve, reject) => {
+        return resolve({
+            result: result,
+            page: page,
+            images: images
+        })
+    })
+}
+
 export function getImageOnDisk(imageName) {
     return new Promise((resolve, reject) => {
         readFile(`${IMAGE_DESTINATION_FOLDER}/${imageName}`, (err, data) => {

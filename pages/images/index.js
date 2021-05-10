@@ -2,10 +2,11 @@ import React from 'react';
 import { PageTemplate } from '../../components/PageTemplate'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Form, InputGroup, Card, Image } from '@themesberg/react-bootstrap';
+import { Col, Row, Form, InputGroup, Button} from '@themesberg/react-bootstrap';
 
 import { ImageDisplayGrid } from '../../components/images/ImageDisplayGrid'
-import { getPublicImages } from '../../util/database/imageRepository/localFileImageRepository';
+import { getPublicImages, getPaginationResultsFromImages } from '../../util/database/imageRepository/localFileImageRepository';
+
 
 // Public image searching
 const PublicImageSearch = (props) => {
@@ -32,18 +33,33 @@ const PublicImageSearch = (props) => {
 
       <ImageDisplayGrid images={props.publicImages}/>
 
+      <div className="pb-5"/>
+
+      {props.result.back ? <Button href={`/images?page=${props.page - 1}`} className="primary">Back</Button> : null}
+      {props.result.forward ? <Button href={`/images?page=${props.page + 1}`} className="primary">Forward</Button> : null}
+
     </PageTemplate>
   );
 };
 
 export async function getServerSideProps(context) {
 
-  const currentPage = parseInt(context.query.page) || 0
+  let currentPage
+
+  try {
+    currentPage = parseInt(context.query.page) || 0
+  } catch(e) {
+    currentPage = 0
+  }
+
   return await getPublicImages(currentPage)
+    .then((images) => getPaginationResultsFromImages(currentPage, images))
     .then((images) => {
       return {
         props: {
-          publicImages: images
+          result: images.result,
+          page: images.page,
+          publicImages: images.images
         }
       }
     })
