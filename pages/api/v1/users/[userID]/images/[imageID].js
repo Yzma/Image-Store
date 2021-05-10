@@ -31,10 +31,10 @@ export default async (req, res) => {
 
                 return data
             })
-            .then(() => getAuthenticatedUserFromRequest(req))
-            .then(data => { 
-                return data.id == userID ? res.status(200).send(data) : res.status(200).send({ error: NO_AUTHORIZATION }) 
-            })
+            .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))
+            .then(data =>
+                res.status(200).send(data) 
+            )
             .catch((error) => {
 
                 if(error.returnAlready) {
