@@ -27,7 +27,7 @@ This was made for Shopifys 2021 Backend Internship challenge.
 
 ## Getting Started
 
-Prerequisites:
+#### Prerequisites:
 
 1. Latest version of NodeJS
 2. PostgreSQL server
@@ -35,6 +35,9 @@ Prerequisites:
 - You can find more information here:
   - https://next-auth.js.org/providers/github
   - https://next-auth.js.org/providers/google
+
+
+#### Running the project:
 
 1. Download or clone the project (git clone git@github.com:Yzma/Shopify-Backend-Internship-Challenge.git)
 2. Start a terminal inside of the project directory and run ‘npm install’ and wait for the command to complete
