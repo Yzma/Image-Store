@@ -31,12 +31,24 @@ Prerequisites:
 1. Download or clone the project (git clone git@github.com:Yzma/Shopify-Backend-Internship-Challenge.git)
 2. Start a terminal inside of the project directory and run ‘npm install’ and wait for the command to complete
 3. Create an environment file (‘.env’) inside the project directory
-4. run the local development server:
+4. Set the following variables:
+
+```bash
+NEXTAUTH_URL=http://localhost:3000/
+
+GOOGLE_CLIENT_ID=[Google Client ID]
+GOOGLE_CLIENT_ID_SECRET=[Google Client Sercret]
+
+GITHUB_CLIENT_ID=[Github Client ID]
+GITHUB_CLIENT_ID_SECRET=[Github Client Sercret]
+
+DATABASE_URL=[PostgreSQL URL]
+```
+
+5. Run the local development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to.
