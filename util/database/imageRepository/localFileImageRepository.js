@@ -124,11 +124,9 @@ export function getPaginationResultsFromImages(currentPage, images) {
         invalid: false
     }
 
-    if(page == 0) {
-        if(imagesLength >= limit) {
-            result.forward = true
-        }
-    }  
+    if(imagesLength >= limit) {
+        result.forward = true
+    }
     
     if(page > 0) {
         result.back = true
