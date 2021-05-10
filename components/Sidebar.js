@@ -7,6 +7,8 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faImages, faHandHoldingUsd, faSignOutAlt, faTimes, faHome } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 
+import { useSession } from 'next-auth/client'
+
 export const Sidebar = (props) => {
 
   const [ session, loading ] = useSession()
@@ -37,6 +39,8 @@ export const Sidebar = (props) => {
       </Nav.Item>
     );
   };
+
+  if(!session) return ''
 
   return (
     <>
