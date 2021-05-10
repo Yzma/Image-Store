@@ -1,6 +1,6 @@
 
 ## Notes
-Unfortunately, I didn’t have as much time as I wanted to work on this project. So the master branch will be left open, and work will continue on a separate branch (“dev"). You can find the 1.0 release of the project [link-here](here). I will try to post consistent downloads when I have more updates for the project. Thanks!
+Unfortunately, I didn’t have as much time as I wanted to work on this project. So the master branch will be left open, and work will continue on a separate branch (“dev"). You can find the 1.0 release of the project [here](https://github.com/Yzma/Shopify-Backend-Internship-Challenge/releases/tag/v1.0). I will try to post consistent downloads when I have more updates for the project. Thanks!
 
 ## About
 
