@@ -2,9 +2,17 @@
 ## Notes
 Unfortunately, I didn’t have as much time as I wanted to work on this project. So the master branch will be left open, and work will continue on a separate branch (“dev"). You can find the 1.0 release of the project [here](https://github.com/Yzma/Shopify-Backend-Internship-Challenge/releases/tag/v1.0). I will try to post consistent downloads when I have more updates for the project. Thanks!
 
+## Unimplemented Ideas
+
+1. I was not able to finish implementing the ability to purchases images, so some code and buttons on the frontend are still left in such as the manage balance button.
+2. Images can be marked as private but there is currently no way to do it on the frontend. You have to match a PATCH request to `/api/v1/users/[userID]/images/[imageID]` and set the private variable to true.
+
 ## About
 
-This project is an image repository project created with NextJS and PostgreSQL. The main purpose of this project is as follows:
+The main purpose of this project is an image repository. A place for users to upload/view and delete images with a frontend and backend created with NextJS.
+
+
+From the shopify development document, this project currently implements the following: 
 - ADD image(s) to the repository
   - one / bulk / enormous amount of images
   - private or public (permissions)
@@ -68,26 +76,18 @@ Now that we're on the main dashboard, let’s go over the various pages we can i
 ### Header: 
 Clicking on your profile picture at the top right allows you to go to your profile page and log out.
 
+### Images page
+Public images view page. This page shows all the public images in the database to the user. Try uploading some images to on your profile and you will see them here.
+
 ### Profile page
-
-User Profile:
 To go to your profile, click your profile picture at the top right and click “Your Profile”. Or type (http://localhost:3000/users/1)
-
 Once on your profile, go to the "My Images" tab and click "Upload Images". From here you can upload up to 12 files at a time.
 
-## Technologies used:
+## Main Technologies Used:
 
-NextJS:
-
-PostgreSQL (with Prisma):
-
-Bootstrap/React (front-end):
-
-Other (Validation):
-
-Joi/Yup: Input validation
-Formik: Form validation
-Multer: Validating files
+1. [NextJS](https://nextjs.org/) - Backend and Frontend
+2. [PostgreSQL](https://www.postgresql.org/) (with [Prisma](https://www.prisma.io/)) - Backend
+3. [Bootstrap](https://react-bootstrap.github.io/)/[React](https://reactjs.org/) (front-end) - Frontend
 
 ## Testing
 
