@@ -33,33 +33,17 @@ export function getAuthenticatedUserFromRequest(req, options = null) {
                 throw new InvalidUserError(RESPONSE_ERRORS.INVALID_SESSION_DATA)
             }
 
-            return prisma.session.findFirst({
-                where: {
-                    accessToken: session.accessToken
-                },
-
-                select: {
-                    userId: true
-                }
-            })
-        })
-        .then((userID) => {
-
-            if (!userID) {
-                throw new InvalidUserError(RESPONSE_ERRORS.USER_NOT_FOUND)
-            }
-
-            const { userId: id } = userID
+            const userID = session.user.id
 
             if(options?.ensureUserID) {
-                if(id != options.ensureUserID) {
+                if(userID != options.ensureUserID) {
                     throw new InvalidUserError(RESPONSE_ERRORS.NO_AUTHORIZATION)
                 }
             }            
 
             return prisma.user.findFirst({
                 where: {
-                    id: id
+                    id: userID
                 },
 
                 select: {
