@@ -12,7 +12,7 @@ export const ProfileCard = (props) => {
       <Card border="light" className="text-center p-0 mb-4">
         <div className="profile-cover rounded-top" />
         <Card.Body className="pb-5">
-          <Card.Img src={image ? image : DefaultProfilePicture} alt="Default Image" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
+          <Card.Img src={image || DefaultProfilePicture} className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
           <Card.Title>{name}</Card.Title>
           <Card.Subtitle>Balance: {balance || 0}</Card.Subtitle>
         </Card.Body>
