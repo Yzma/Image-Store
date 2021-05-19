@@ -1,150 +1,107 @@
 
-import React, {useState} from 'react';
-
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/client'
-import useSWR from 'swr'
-
-import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination, Modal } from '@themesberg/react-bootstrap';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
-
-import { Formik } from "formik";
-import Dropzone, {useDropzone} from "react-dropzone";
+import { faSearch, faPlus, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { Col, Row, Dropdown, Card, Form, Button, InputGroup, Nav, Tab, Table, ButtonGroup, Pagination, Modal } from '@themesberg/react-bootstrap';
+import { Formik, ErrorMessage, Form as FormikForm } from "formik";
 
 import * as yup from "yup";
+import useSWR from 'swr'
 
 import { ImageDisplayGrid } from '../images/ImageDisplayGrid'
+import { UploadImages } from './upload/UploadImages';
+import { MAX_FILE_SIZE_IN_BYTES, ACCEPTED_FILE_UPLOAD_MIME_TYPES } from '../../util/constants';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const ProfileTabs = (props) => {
-
-  const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
-  
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
-  const FILE_SIZE = 160 * 1024;
-  const SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/gif",
-    "image/png"
-  ];
-  const validationSchema = yup.object().shape({
-    text: yup.string().required("A text is required"),
-    file: yup
-      .mixed()
-      .required("A file is required")
-      .test(
-        "fileSize",
-        "File too large",
-        value => value && value.size <= FILE_SIZE
-      )
-      .test(
-        "fileFormat",
-        "Unsupported Format",
-        value => value && SUPPORTED_FORMATS.includes(value.type)
-      )
-  });
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [session, loading] = useSession()
 
-    const [ session, loading ] = useSession() 
+  // const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
 
-    const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
+  // const { images, imagesError } = useSWR(
+  //   ["http://localhost:3000/api/v1/users/1/images", session],
+  //   fetcher,
+  //   // {
+  //   //   revalidateOnFocus: false,
+  //   //   revalidateOnMount:false,
+  //   //   revalidateOnReconnect: false,
+  //   //   refreshWhenOffline: false,
+  //   //   refreshWhenHidden: false,
+  //   //   refreshInterval: 0
+  //   // }
+  // );
 
-    // const { images, imagesError } = useSWR(
-    //   ["http://localhost:3000/api/v1/users/1/images", session],
-    //   fetcher,
-    //   // {
-    //   //   revalidateOnFocus: false,
-    //   //   revalidateOnMount:false,
-    //   //   revalidateOnReconnect: false,
-    //   //   refreshWhenOffline: false,
-    //   //   refreshWhenHidden: false,
-    //   //   refreshInterval: 0
-    //   // }
-    // );
+  // if (error) return "An error has occurred.";
+  // if (!data) return "Loading...";
 
-    if (error) return "An error has occurred.";
-    if (!data) return "Loading...";
+  // const { transactions, error } = useSWR(
+  //   ["http://localhost:3000/api/v1/users/1/transactions?option=bought", session],
+  //   fetcher,
+  //   {
+  //     revalidateOnFocus: false,
+  //     revalidateOnMount:false,
+  //     revalidateOnReconnect: false,
+  //     refreshWhenOffline: false,
+  //     refreshWhenHidden: false,
+  //     refreshInterval: 0
+  //   }
+  // );
 
-    // const { transactions, error } = useSWR(
-    //   ["http://localhost:3000/api/v1/users/1/transactions?option=bought", session],
-    //   fetcher,
-    //   {
-    //     revalidateOnFocus: false,
-    //     revalidateOnMount:false,
-    //     revalidateOnReconnect: false,
-    //     refreshWhenOffline: false,
-    //     refreshWhenHidden: false,
-    //     refreshInterval: 0
-    //   }
-    // );
-    
-    const transactions = null
+  const transactions = null
 
-    const totalTransactions = transactions?.length || 0;
+  const totalTransactions = transactions?.length || 0;
 
-    const TableRow = (props) => {
-      const { tableNumber, id, image, imageID, sellerUserID, amount, datePurchased } = props;
-      console.log(tableNumber)
-      console.log(id)
-      console.log(imageID)
-      console.log(sellerUserID)
-      console.log(amount)
-      console.log(datePurchased)
+  const TableRow = (props) => {
+    const { tableNumber, id, image, imageID, sellerUserID, amount, datePurchased } = props;
 
-      
-
-      return (
-        <tr>
-          <td>
-            <Card.Link className="fw-normal">
-              {tableNumber}
-            </Card.Link>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {id}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {image.title}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {imageID}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {sellerUserID}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {amount}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {datePurchased}
-            </span>
-          </td>
-        </tr>
-      )
-    }
+    return (
+      <tr>
+        <td>
+          <Card.Link className="fw-normal">
+            {tableNumber}
+          </Card.Link>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {id}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {image.title}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {imageID}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {sellerUserID}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {amount}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {datePurchased}
+          </span>
+        </td>
+      </tr>
+    )
+  }
 
   return (
     <Tab.Container defaultActiveKey="myimages">
@@ -190,7 +147,7 @@ export const ProfileTabs = (props) => {
                   <FontAwesomeIcon icon={faPlus} className="me-1" /> Upload Images
                 </Button>
               </div>
-   
+
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Upload Images</Modal.Title>
@@ -199,20 +156,38 @@ export const ProfileTabs = (props) => {
 
                   <Formik
                     initialValues={{
-                      files: [],
+                      images: [],
                     }}
+
+                    validationSchema={yup.object({
+                      images: yup.array().of(
+                        yup
+                          .mixed()
+                          .required("A file is required")
+                          .test(
+                            "fileSize",
+                            "File too large",
+                            value => value && value.size <= MAX_FILE_SIZE_IN_BYTES
+                          )
+                          .test(
+                            "type",
+                            "Unsupported Format",
+                            value => value && ACCEPTED_FILE_UPLOAD_MIME_TYPES.includes(value.type)
+                          )
+                      ).min(1)
+                    })}
 
                     onSubmit={(values) => {
                       console.log('Values: ', values)
 
                       const formData = new FormData();
-                      values.files.forEach(element => {
+                      values.images.forEach(element => {
                         formData.append('images', element);
                       });
 
                       console.log('Your session ', session)
 
-                      fetch(`http://localhost:3000/api/v1/users/${session.user.id}/images`, {
+                      fetch(`/api/v1/users/${session.user.id}/images`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -225,49 +200,29 @@ export const ProfileTabs = (props) => {
                           console.debug('Error:', error);
                         })
                     }}
-
-                    validationSchema={yup.object().shape({
-                      recaptcha: yup.array(),
-                    })}
-
-                    render={({ values, handleSubmit, setFieldValue }) => (
-                      <Form onSubmit={handleSubmit}>
+                  >
+                    {({ values, setFieldValue, errors, isValid, isSubmitting }) => (
+                      <FormikForm>
                         <div className="form-group">
 
-                          <Dropzone onDrop={files => {
-                            setFieldValue("files", files)
-                          }} >
-                            {({ getRootProps, getInputProps, acceptedFiles }) => (
-                              <div className="container">
-                                <div
-                                  {...getRootProps({
-                                    className: 'dropzone',
-                                    onDrop: event => event.stopPropagation()
-                                  })}
-                                >
-                                  <Form.Control name="files" type="input" {...getInputProps()} />
-                                  <p>Drag 'n' drop some files here, or click to select files</p>
-                                </div>
-                                <aside>
-                                  <h4 className="text-left pt-3">{acceptedFiles ? `Files (${acceptedFiles.length})` : null}</h4>
-                                  <ul>
-                                    {acceptedFiles.map(file => (
-                                      <li key={file.path}>
-                                        {file.path} - {file.size} bytes
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </aside>
-                              </div>
-                            )}
-                          </Dropzone>
+                          <div className="pb-4">
+                            <UploadImages name="images" setFieldValue={setFieldValue} />
+                          </div>
+
+                          {(!isValid || isSubmitting) ? null :
+                            <div className="d-flex justify-content-end">
+                              <Button type="submit" variant="primary" disabled={!isValid || isSubmitting}>
+                                <FontAwesomeIcon icon={faUpload} className="me-1" />Confirm Upload
+                              </Button>
+                            </div>
+                          }
 
                         </div>
-                        <div className="d-flex justify-content-end">
-                          <Button type="submit" variant="primary">Confirm Upload</Button>
-                        </div>
-                      </Form>
-                    )} />
+                        <ErrorMessage name="images" />
+                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+                      </FormikForm>
+                    )}
+                  </Formik>
 
                 </Modal.Body>
               </Modal>
@@ -299,7 +254,7 @@ export const ProfileTabs = (props) => {
                 <Col xs={8} md={6} lg={3} xl={4}>
 
                   {/* TODO: Only show search bar when user has images  */}
-                    {/* <InputGroup>
+                  {/* <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faSearch} />
                       </InputGroup.Text>
