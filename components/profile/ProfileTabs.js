@@ -24,23 +24,23 @@ export const ProfileTabs = (props) => {
 
   const [session, loading] = useSession()
 
-  // const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
+  const { data, error } = useSWR(`http://localhost:3000/api/v1/users/${props.user.id}/images`, fetcher);
 
-  // const { images, imagesError } = useSWR(
-  //   ["http://localhost:3000/api/v1/users/1/images", session],
-  //   fetcher,
-  //   // {
-  //   //   revalidateOnFocus: false,
-  //   //   revalidateOnMount:false,
-  //   //   revalidateOnReconnect: false,
-  //   //   refreshWhenOffline: false,
-  //   //   refreshWhenHidden: false,
-  //   //   refreshInterval: 0
-  //   // }
-  // );
+  const { images, imagesError } = useSWR(
+    ["http://localhost:3000/api/v1/users/1/images", session],
+    fetcher,
+    // {
+    //   revalidateOnFocus: false,
+    //   revalidateOnMount:false,
+    //   revalidateOnReconnect: false,
+    //   refreshWhenOffline: false,
+    //   refreshWhenHidden: false,
+    //   refreshInterval: 0
+    // }
+  );
 
-  // if (error) return "An error has occurred.";
-  // if (!data) return "Loading...";
+  if (error) return "An error has occurred.";
+  if (!data) return "Loading...";
 
   // const { transactions, error } = useSWR(
   //   ["http://localhost:3000/api/v1/users/1/transactions?option=bought", session],
