@@ -218,8 +218,8 @@ export const ProfileTabs = (props) => {
                           }
 
                         </div>
-                        <ErrorMessage name="images" />
-                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+                        {/* <ErrorMessage name="images" />
+                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre> */}
                       </FormikForm>
                     )}
                   </Formik>
