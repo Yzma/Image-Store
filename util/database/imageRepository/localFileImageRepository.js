@@ -168,7 +168,6 @@ export async function uploadImages(userID, images) {
 
     const parsedUserID = parseInt(userID)
     const data = images.map((value) => {
-        console.log(value)
         return {
             title: value.originalname,
             fileName: value.filename,
