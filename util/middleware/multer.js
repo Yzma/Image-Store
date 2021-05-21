@@ -1,12 +1,17 @@
 
-import initMiddleware from './initMiddleware'
-
-import * as Constants from '../constants'
-
+import path from 'path'
 import multer from 'multer';
 import cryptoRandomString from 'crypto-random-string';
 
-const path = require("path")
+import initMiddleware from './initMiddleware'
+
+import { InvalidFileTypeError } from '../errors';
+import * as Constants from '../constants'
+
+const CRYPTO_RANDOM_STRING_OPTIONS = {
+    length: 10,
+    type: 'url-safe'
+}
 
 const upload = multer({
 
@@ -16,7 +21,7 @@ const upload = multer({
         },
 
         filename: (req, file, cb) => {
-            const random = cryptoRandomString({length: 10, type: 'url-safe'});
+            const random = cryptoRandomString(CRYPTO_RANDOM_STRING_OPTIONS);
             cb(null, `${random}-${path.extname(file.originalname)}`)
         }
     }),
@@ -31,22 +36,8 @@ const upload = multer({
 
     limits: {
         files: Constants.MAX_IMAGES_PER_UPLOAD,
-        fileSize: Constants.MAX_FILE_SIZE_IN_BYTES, // 1 MB (max file size)
+        fileSize: Constants.MAX_FILE_SIZE_IN_BYTES
     }
 })
-
-export class InvalidFileTypeError extends Error {
-    constructor(params) {
-        // Pass remaining arguments (including vendor specific ones) to parent constructor
-        super(params)
-
-        // Maintains proper stack trace for where our error was thrown (only available on V8)
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, InvalidFileTypeError)
-        }
-
-        this.name = 'InvalidFileTypeError'
-    }
-}
 
 export const MulterMiddleware = initMiddleware(upload.array('images'))
