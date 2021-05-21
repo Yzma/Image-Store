@@ -15,7 +15,7 @@ export default async (req, res) => {
     const { userID, visibility } = req.query
 
     if (req.method === "GET") {
-        return await getImages(userID, visibility)
+        return getImages(userID, visibility)
             .then((data) => res.status(200).json(data))
             .catch((error) => {
                 console.error(error)
@@ -25,7 +25,7 @@ export default async (req, res) => {
     // POST request to upload image
     } else if (req.method === "POST") {
 
-        return await getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
+        return getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
             .then(() =>
 
                 // After we confirm the user exists and authenticated, let's start uploading.

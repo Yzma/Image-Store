@@ -18,7 +18,7 @@ export default async (req, res) => {
         
         const { balance } = req.body
 
-        return await userBalanceSchema.validateAsync({ balance: balance })
+        return userBalanceSchema.validateAsync({ balance: balance })
             .then(() => updateUserBalance(userID, balance))
             .then((data) => res.status(200).json(data))
             .catch((error) => {

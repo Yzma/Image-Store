@@ -15,7 +15,7 @@ export default async (req, res) => {
     // Get Image by ID
     if(req.method === "GET") {
 
-        return await getImage(userID, imageID)
+        return getImage(userID, imageID)
             .then((data) => {
                 if (!data)
                     throw { returnAlready: NOT_FOUND }
@@ -54,7 +54,7 @@ export default async (req, res) => {
  
         const { title, description, private: isPrivate } = req.body
 
-        return await imageSchema.validateAsync({ title: title, description: description, private: isPrivate })
+        return imageSchema.validateAsync({ title: title, description: description, private: isPrivate })
             .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))      
             .then(() => updateImage(userID, imageID,  { title, description, private: isPrivate }))
             .then((data) => res.status(200).json(data))
@@ -74,7 +74,7 @@ export default async (req, res) => {
     // DELETE image by ID - TODO: Figure out how to return API code for this
     } else if(req.method === "DELETE") {
 
-        return await getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
+        return getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
             .then(() => deleteImage(userID, imageID))
             .then((data) => res.status(200).json(data))
             .catch((error) => {

@@ -11,7 +11,7 @@ export default async (req, res) => {
     */
     if (req.method === "GET") {
         
-        return await getUser(userID)
+        return getUser(userID)
             .then((data) => {
                 if(!data) {
                     return res.status(404).json({ error: USER_NOT_FOUND })

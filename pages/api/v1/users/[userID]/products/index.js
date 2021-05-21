@@ -12,7 +12,7 @@ export default async (req, res) => {
 
     if (req.method === "GET") {
         
-        return await getAuthenticatedUserFromRequest(req, { ensureUserID: parseInt(userID) })
+        return getAuthenticatedUserFromRequest(req, { ensureUserID: parseInt(userID) })
             .then(() => getUserProducts(parseInt(userID)))
             .then((data) => {
                 return res.status(200).json(data)
@@ -33,7 +33,7 @@ export default async (req, res) => {
         const { imageID } = req.body
 
         // Create a new product 
-        return await getAuthenticatedUserFromRequest(req)
+        return getAuthenticatedUserFromRequest(req)
             .then((data) => null)
             .catch((error) => {
 
