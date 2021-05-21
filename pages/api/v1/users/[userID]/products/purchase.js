@@ -14,7 +14,7 @@ export default async (req, res) => {
         
         const { option } = req.query
 
-        return await getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
+        return getAuthenticatedUserFromRequest(req, { ensureUserID: userID })
             .then(() => getUserTransactions(userID, option))
             .then((data) => {
                 // Check if the user is who it claims to be

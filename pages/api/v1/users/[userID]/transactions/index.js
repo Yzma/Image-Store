@@ -14,7 +14,7 @@ export default async (req, res) => {
         
         const { option } = req.query
 
-        return await transactionModeSchema.validateAsync({ option: option })
+        return transactionModeSchema.validateAsync({ option: option })
             .then(() => getAuthenticatedUserFromRequest(req, { ensureUserID: userID }))
             .then(() => getUserTransactions(userID, option))
             .then((data) => {

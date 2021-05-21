@@ -9,7 +9,7 @@ export default async (req, res) => {
 
     if (req.method === "GET") {
         
-        return await getImageOnDisk(imageName)
+        return getImageOnDisk(imageName)
             .then((image) => {
                 res.setHeader('Content-Type', image.mimeType);
                 return res.status(200).send(image.imageData)
