@@ -177,7 +177,7 @@ export const ProfileTabs = (props) => {
                       ).min(1)
                     })}
 
-                    onSubmit={(values) => {
+                    onSubmit={async (values) => {
                       console.log('Values: ', values)
 
                       const formData = new FormData();
@@ -187,7 +187,7 @@ export const ProfileTabs = (props) => {
 
                       console.log('Your session ', session)
 
-                      fetch(`/api/v1/users/${session.user.id}/images`, {
+                      return fetch(`/api/v1/users/${session.user.id}/images`, {
                         method: 'POST',
                         body: formData,
                       })
