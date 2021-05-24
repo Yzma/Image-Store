@@ -22,6 +22,7 @@ const NextAuthProvider = NextAuth({
     }
   },
 
+  secret: process.env.SECRET,
   adapter: Adapters.Prisma.Adapter({ prisma }),
 })
 
