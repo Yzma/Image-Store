@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField } from 'formik';
 
-import { ACCEPTED_FILE_UPLOAD_MIME_TYPES, MAX_FILE_SIZE_IN_BYTES } from "../../../util/constants";
+import { ACCEPTED_FILE_UPLOAD_MIME_TYPES, MAX_FILE_SIZE_IN_BYTES } from 'util/constants';
 
 const baseStyle = {
   flex: 1,

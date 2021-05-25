@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from '@themesberg/react-bootstrap';
 
-import DefaultProfilePicture from "../../public/assets/img/team/profile-picture-1.jpg";
+import DefaultProfilePicture from 'public/assets/img/team/profile-picture-1.jpg';
 
 export const ProfileCard = (props) => {
 

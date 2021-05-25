@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Row, Col, Card } from '@themesberg/react-bootstrap';
-import { ErrorCode } from "../util/constants";
+import { ErrorCode } from "util/constants";
 
 export const CannotViewImageError = (props) => {
     return (

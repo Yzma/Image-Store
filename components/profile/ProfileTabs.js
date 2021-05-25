@@ -9,9 +9,9 @@ import { Formik, ErrorMessage, Form as FormikForm } from "formik";
 import * as yup from "yup";
 import useSWR from 'swr'
 
-import { ImageDisplayGrid } from '../images/ImageDisplayGrid'
-import { UploadImages } from './upload/UploadImages';
-import { MAX_FILE_SIZE_IN_BYTES, ACCEPTED_FILE_UPLOAD_MIME_TYPES } from '../../util/constants';
+import { ImageDisplayGrid } from 'components/images/ImageDisplayGrid'
+import { UploadImages } from 'components/profile/upload/UploadImages';
+import { MAX_FILE_SIZE_IN_BYTES, ACCEPTED_FILE_UPLOAD_MIME_TYPES } from 'util/constants';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
