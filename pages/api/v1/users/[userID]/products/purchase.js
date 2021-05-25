@@ -1,10 +1,10 @@
 
-import { transactionModeSchema } from '../../../../../../util/joiSchemas'
-import { getUserTransactions, getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
+import { transactionModeSchema } from 'util/joiSchemas'
+import { getUserTransactions, getAuthenticatedUserFromRequest } from 'util/database/userUtil'
 
-import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED, INVALID_DATA } from '../../../../../../util/constants/response_constants'
+import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED, INVALID_DATA } from 'util/constants/response_constants'
 import { ValidationError } from 'joi'
-import { InvalidUserError } from '../../../../../../util/errors'
+import { InvalidUserError } from 'util/errors'
 
 export default async (req, res) => {
 

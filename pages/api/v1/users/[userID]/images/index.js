@@ -1,12 +1,11 @@
 
+import { getAuthenticatedUserFromRequest } from 'util/database/userUtil'
+import { getImages, uploadImages } from 'util/database/imageRepository/localFileImageRepository'
 
-import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
-import { getImages, uploadImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
+import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, FILES_TOO_LARGE, TOO_MANY_FILES, INVALID_FILE_TYPES } from 'util/constants/response_constants'
 
-import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, FILES_TOO_LARGE, TOO_MANY_FILES, INVALID_FILE_TYPES } from '../../../../../../util/constants/response_constants'
-
-import { MulterMiddleware } from '../../../../../../util/middleware/multer'
-import { InvalidUserError, InvalidFileTypeError } from '../../../../../../util/errors'
+import { MulterMiddleware } from 'util/middleware/multer'
+import { InvalidUserError, InvalidFileTypeError } from 'util/errors'
 import { MulterError } from 'multer'
 
 export default async (req, res) => {

@@ -1,10 +1,9 @@
 
+import { getAuthenticatedUserFromRequest, getUserProducts } from 'util/database/userUtil'
 
-import { getAuthenticatedUserFromRequest, getUserProducts } from '../../../../../../util/database/userUtil'
-
-import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED} from '../../../../../../util/constants/response_constants'
+import { INTERNAL_SERVER_ERROR, METHOD_NOT_SUPPORTED} from 'util/constants/response_constants'
 import { ValidationError } from 'joi'
-import { InvalidUserError } from '../../../../../../util/errors'
+import { InvalidUserError } from 'util/errors'
 
 export default async (req, res) => {
 

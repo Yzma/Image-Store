@@ -1,7 +1,7 @@
 
-import { getImageOnDisk } from "../../../../util/database/imageRepository/localFileImageRepository"
+import { getImageOnDisk } from "util/database/imageRepository/localFileImageRepository"
 
-import { METHOD_NOT_SUPPORTED, NOT_FOUND, INTERNAL_SERVER_ERROR } from "../../../../util/constants/response_constants"
+import { METHOD_NOT_SUPPORTED, NOT_FOUND, INTERNAL_SERVER_ERROR } from "util/constants/response_constants"
 
 export default async (req, res) => {
 

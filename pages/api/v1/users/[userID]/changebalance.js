@@ -1,11 +1,11 @@
 
-import { userBalanceSchema } from '../../../../../util/joiSchemas'
-import { updateUserBalance } from '../../../../../util/database/userUtil'
+import { userBalanceSchema } from 'util/joiSchemas'
+import { updateUserBalance } from 'util/database/userUtil'
 
 import { ValidationError } from 'joi'
-import { InvalidUserError } from '../../../../../util/errors'
+import { InvalidUserError } from 'util/errors'
 
-import { METHOD_NOT_SUPPORTED, INVALID_DATA, NOT_FOUND, INTERNAL_SERVER_ERROR } from '../../../../../util/constants/response_constants'
+import { METHOD_NOT_SUPPORTED, INVALID_DATA, NOT_FOUND, INTERNAL_SERVER_ERROR } from 'util/constants/response_constants'
 
 export default async (req, res) => {
 
