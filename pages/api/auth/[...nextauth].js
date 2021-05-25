@@ -16,9 +16,12 @@ const NextAuthProvider = NextAuth({
     }),
   ],
   callbacks: {
-    async session(session, token) {
-      session.user.id = token.id
-      return session
+    async session(session, user) {
+      return {...session,
+        user: {
+          ...user,
+        },
+      }
     }
   },
 
