@@ -1,6 +1,6 @@
 import { Provider } from 'next-auth/client'
 
-import '../styles/volt.scss'
+import 'styles/volt.scss'
 
 function MyApp({ Component, pageProps }) {
   return (

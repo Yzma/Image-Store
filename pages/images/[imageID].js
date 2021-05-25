@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { PageTemplate } from '../../components/PageTemplate'
+import { PageTemplate } from 'components/PageTemplate'
 import { Col, Row, Container, Card } from '@themesberg/react-bootstrap';
 
-import { CannotViewImageError } from '../../components/CannotViewImageError';
-import { getImageById } from '../../util/database/imageRepository/localFileImageRepository'
-import { ErrorCode } from '../../util/constants';
+import { CannotViewImageError } from 'components/CannotViewImageError';
+import { getImageById } from 'util/database/imageRepository/localFileImageRepository'
+import { ErrorCode } from 'util/constants';
 
 const ViewImage = (props) => {
 
@@ -86,7 +86,7 @@ const ViewImage = (props) => {
 
 export async function getServerSideProps(context) {
 
-    return await getImageById(context.params.imageID)
+    return getImageById(context.params.imageID)
         .then((image) => {
             return {
                 props: {
