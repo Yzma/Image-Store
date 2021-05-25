@@ -1,6 +1,6 @@
 
-import { getUser } from '../../../../../util/database/userUtil'
-import { METHOD_NOT_SUPPORTED, USER_NOT_FOUND } from '../../../../../util/constants/response_constants'
+import { getUser } from 'util/database/userUtil'
+import { METHOD_NOT_SUPPORTED, USER_NOT_FOUND } from 'util/constants/response_constants'
 
 export default async (req, res) => {
 

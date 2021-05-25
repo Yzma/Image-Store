@@ -1,12 +1,12 @@
 
-import { imageSchema } from '../../../../../../util/joiSchemas'
+import { imageSchema } from 'util/joiSchemas'
 
-import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
-import { getImage, updateImage, deleteImage } from '../../../../../../util/database/imageRepository/localFileImageRepository'
-import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, NOT_FOUND, INVALID_DATA, NO_AUTHORIZATION} from '../../../../../../util/constants/response_constants'
+import { getAuthenticatedUserFromRequest } from 'util/database/userUtil'
+import { getImage, updateImage, deleteImage } from 'util/database/imageRepository/localFileImageRepository'
+import { METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR, NOT_FOUND, INVALID_DATA, NO_AUTHORIZATION} from 'util/constants/response_constants'
 
 import { ValidationError } from 'joi'
-import { InvalidUserError } from '../../../../../../util/errors'
+import { InvalidUserError } from 'util/errors'
 
 export default async (req, res) => {
 

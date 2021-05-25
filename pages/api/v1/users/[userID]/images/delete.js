@@ -1,12 +1,12 @@
 
-import { getAuthenticatedUserFromRequest } from '../../../../../../util/database/userUtil'
-import { deleteImages } from '../../../../../../util/database/imageRepository/localFileImageRepository'
-import { imageDeleteSchema } from '../../../../../../util/joiSchemas'
+import { getAuthenticatedUserFromRequest } from 'util/database/userUtil'
+import { deleteImages } from 'util/database/imageRepository/localFileImageRepository'
+import { imageDeleteSchema } from 'util/joiSchemas'
 
 import { ValidationError } from 'joi'
-import { InvalidUserError } from '../../../../../../util/errors'
+import { InvalidUserError } from 'util/errors'
 
-import { INVALID_DATA, METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR } from '../../../../../../util/constants/response_constants'
+import { INVALID_DATA, METHOD_NOT_SUPPORTED, INTERNAL_SERVER_ERROR } from 'util/constants/response_constants'
 
 export default async (req, res) => {
 
