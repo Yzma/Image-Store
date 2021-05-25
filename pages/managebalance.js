@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 
 import { object, number } from 'yup';
 
-import { getAuthenticatedUserFromRequest } from '../util/database/userUtil';
+import { getAuthenticatedUserFromRequest } from 'util/database/userUtil';
 
 const ManageBalance = (props) => {
 

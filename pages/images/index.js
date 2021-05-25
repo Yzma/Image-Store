@@ -1,11 +1,11 @@
 import React from 'react';
-import { PageTemplate } from '../../components/PageTemplate'
+import { PageTemplate } from 'components/PageTemplate'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, InputGroup, Button} from '@themesberg/react-bootstrap';
 
-import { ImageDisplayGrid } from '../../components/images/ImageDisplayGrid'
-import { getPublicImages, getPaginationResultsFromImages } from '../../util/database/imageRepository/localFileImageRepository';
+import { ImageDisplayGrid } from 'components/images/ImageDisplayGrid'
+import { getPublicImages, getPaginationResultsFromImages } from 'util/database/imageRepository/localFileImageRepository';
 
 
 // Public image searching
@@ -52,7 +52,7 @@ export async function getServerSideProps(context) {
     currentPage = 0
   }
 
-  return await getPublicImages(currentPage)
+  return getPublicImages(currentPage)
     .then((images) => getPaginationResultsFromImages(currentPage, images))
     .then((images) => {
       return {

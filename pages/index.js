@@ -7,16 +7,16 @@ import { Col, Row, Image, Card, Button, Container, ListGroup, Tooltip, OverlayTr
 
 import { signIn, useSession } from 'next-auth/client'
 
-import ThemesbergLogoIcon from "../public/assets/img/themesberg.svg";
-import ThemesbergLogo from "../public/assets/img/themesberg-logo.svg";
-import MockupPresentation from "../public/assets/img/mockup-presentation.png";
-import ReactHero from '../public/assets/img/technologies/react-hero-logo.svg';
-import MapboxImg from "../public/assets/img/mockup-map-presentation.png";
-import CalendarImg from "../public/assets/img/mockup-calendar-presentation.png";
-import ReactMockupImg from "../public/assets/img/react-mockup.png";
-import BS5IllustrationsImg from "../public/assets/img/illustrations/bs5-illustrations.svg";
-import BS5Logo from "../public/assets/img/technologies/bootstrap-5-logo.svg";
-import ReactLogo from "../public/assets/img/technologies/react-logo.svg";
+import ThemesbergLogoIcon from "public/assets/img/themesberg.svg";
+import ThemesbergLogo from "public/assets/img/themesberg-logo.svg";
+import MockupPresentation from "public/assets/img/mockup-presentation.png";
+import ReactHero from 'public/assets/img/technologies/react-hero-logo.svg';
+import MapboxImg from "public/assets/img/mockup-map-presentation.png";
+import CalendarImg from "public/assets/img/mockup-calendar-presentation.png";
+import ReactMockupImg from "public/assets/img/react-mockup.png";
+import BS5IllustrationsImg from "public/assets/img/illustrations/bs5-illustrations.svg";
+import BS5Logo from "public/assets/img/technologies/bootstrap-5-logo.svg";
+import ReactLogo from "public/assets/img/technologies/react-logo.svg";
 
 export const IndexPage = () => {
 
