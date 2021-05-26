@@ -8,9 +8,9 @@ export const PageTemplate = (props) => {
   return (
     <>
       <main className="content">
-        <Sidebar user={props.user}/>
+        <Sidebar user={props.user} />
         <Header user={props.user} />
-          {props.children}
+        {props.children}
         <Footer />
       </main>
     </>

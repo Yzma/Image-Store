@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { Col, Row } from '@themesberg/react-bootstrap'
-import { PageTemplate } from 'components/PageTemplate'
+import { PageTemplate } from 'components/main/PageTemplate'
 import { ProfileCard } from "components/profile/ProfileCard"
 import { ProfileTabs } from 'components/profile/ProfileTabs'
 import { getUser } from 'util/database/userUtil'

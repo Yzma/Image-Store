@@ -4,14 +4,14 @@ import SimpleBar from 'simplebar-react';
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { faImages, faHandHoldingUsd, faSignOutAlt, faTimes, faHome } from "@fortawesome/free-solid-svg-icons";
-import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
+import { faImages, faHandHoldingUsd, faTimes, faHome } from "@fortawesome/free-solid-svg-icons";
+import { Nav, Badge, Image, Button, Dropdown, Navbar } from '@themesberg/react-bootstrap';
 
 import { useSession } from 'next-auth/client'
 
 export const Sidebar = (props) => {
 
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
 
@@ -40,7 +40,7 @@ export const Sidebar = (props) => {
     );
   };
 
-  if(!session) return ''
+  if (!session) return ''
 
   return (
     <>
@@ -58,12 +58,12 @@ export const Sidebar = (props) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Home" icon={faHome} link={`/users/${session.user.id}`}/>
-              <NavItem title="Search Images" icon={faImages} link={'/images'}/>
+              <NavItem title="Home" icon={faHome} link={`/users/${session.user.id}`} />
+              <NavItem title="Search Images" icon={faImages} link={'/images'} />
 
               <Dropdown.Divider className="my-3 border-indigo" />
-              
-              <NavItem title="Manage Balance" icon={faHandHoldingUsd} link={'/managebalance'}/>
+
+              <NavItem title="Manage Balance" icon={faHandHoldingUsd} link={'/managebalance'} />
 
               <Dropdown.Divider className="my-3 border-indigo" />
 

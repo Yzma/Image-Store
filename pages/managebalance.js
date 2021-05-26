@@ -2,7 +2,7 @@
 import Head from 'next/head'
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/client'
-import { PageTemplate } from '../components/PageTemplate'
+import { PageTemplate } from '../components/main/PageTemplate'
 import { Col, Row, Container, Form, Button, Alert } from '@themesberg/react-bootstrap';
 import { Formik } from 'formik';
 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PageTemplate } from 'components/PageTemplate'
+import { PageTemplate } from 'components/main/PageTemplate'
 import { Col, Row, Container, Card } from '@themesberg/react-bootstrap';
 
 import { CannotViewImageError } from 'components/CannotViewImageError';
