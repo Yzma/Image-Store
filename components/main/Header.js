@@ -6,9 +6,9 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Button, Image, Navbar, Dropdown, Container } from '@themesberg/react-bootstrap';
 
 export const Header = (props) => {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
-  if(loading) return ''
+  if (loading) return ''
 
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-2">
@@ -16,8 +16,8 @@ export const Header = (props) => {
         <div className="d-flex justify-content-end w-100">
           <Nav className="align-items-right">
             {!session ? (
-                <Button onClick={() => signIn()} variant="outline-dark" className="ms-3">Sign In</Button>
-              ) : (
+              <Button onClick={() => signIn()} variant="outline-dark" className="ms-3">Sign In</Button>
+            ) : (
               <>
                 <Dropdown as={Nav.Item}>
                   <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">
@@ -32,15 +32,15 @@ export const Header = (props) => {
                     </Dropdown.Item>
 
                     <Dropdown.Divider />
-                      <Dropdown.Item href={`/users/${session.user.id}`} className="fw-bold">
-                        Your Profile
-                      </Dropdown.Item>
+                    <Dropdown.Item href={`/users/${session.user.id}`} className="fw-bold">
+                      Your Profile
+                    </Dropdown.Item>
                     <Dropdown.Divider />
 
                     <Dropdown.Item className="fw-bold" onClick={() => signOut()}>
-                      <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2"/> Logout
+                      <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
                     </Dropdown.Item>
-                    
+
                   </Dropdown.Menu>
                 </Dropdown>
               </>
