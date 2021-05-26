@@ -15,9 +15,9 @@ export const DisplayImage = (props) => {
         <a href={pageViewURL}><Image src={actualImageURL} className="card-img-top" /></a>
         <Card.Body>
           <Card.Title>
-            {title} {isPrivate ? <FontAwesomeIcon icon={faLock}/> : null}
+            {title} {isPrivate ? <FontAwesomeIcon icon={faLock} /> : null}
           </Card.Title>
-          
+
           <Card.Text>{description}</Card.Text>
         </Card.Body>
       </Card>
