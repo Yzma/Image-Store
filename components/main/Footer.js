@@ -5,18 +5,13 @@ import { Row, Col } from '@themesberg/react-bootstrap';
 export const Footer = () => {
   return (
     <div>
-      <footer className="footer section py-5">
+      <footer className="footer section py-4">
         <Row>
-          <Col xs={12} lg={6} className="mb-4 mb-lg-0">
-            <p className="mb-0 text-center text-xl-left">
-              Copyright © 2021. Andrew Caruso
-            </p>
-            <p>
-              Created with <a href="https://themesberg.com/product/dashboard/volt-react">Volt</a>, <a href="https://nextjs.org/">NextJS</a> and <a href="https://www.postgresql.org/">PostgreSQL</a>
-            </p>
+          <Col>
+            <p className="text-xl-left ms-4">Copyright © 2021. Andrew Caruso</p>
           </Col>
-          <Col xs={12} lg={6}>
-            <ul className="list-inline list-group-flush list-group-borderless text-center text-xl-right mb-0">
+          <Col >
+            <ul className="list-inline list-group-flush list-group-borderless text-xl-right me-4">
               <li className="list-inline-item px-0 px-sm-2">
                 <a href="https://github.com/Yzma/Shopify-Backend-Internship-Challenge" target="_blank">Github</a>
               </li>
