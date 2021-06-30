@@ -13,10 +13,10 @@ export const Footer = () => {
           <Col >
             <ul className="list-inline list-group-flush list-group-borderless text-xl-right me-4">
               <li className="list-inline-item px-0 px-sm-2">
-                <a href="https://github.com/Yzma/Shopify-Backend-Internship-Challenge" target="_blank">Github</a>
+                <a href="https://github.com/Yzma/Image-Store" target="_blank">Github</a>
               </li>
               <li className="list-inline-item px-0 px-sm-2">
-                <a href="https://github.com/Yzma/Shopify-Backend-Internship-Challenge" target="_blank">License</a>
+                <a href="https://github.com/Yzma/Image-Store/blob/master/LICENSE" target="_blank">License</a>
               </li>
             </ul>
           </Col>
