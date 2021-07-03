@@ -15,14 +15,17 @@ import ImageStoreIcon from "public/assets/img/icons/IS.svg";
 
 export const Header = (props) => {
   const [session, loading] = useSession()
+  //<Image src={ImageStoreIcon} width={55} height={80}/>
 
   return (
-    <Navbar variant="dark" expanded className="ps-0 pe-2 pb-2">
+    <Navbar expanded className="ps-0 pe-2 pb-2">
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
-          <div className="d-flex align-items-center">
+          <Nav className="align-items-lg-center">
             <Image src={ImageStoreIcon} width={55} height={80}/>
-          </div>
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="#about">Images</Nav.Link>
+          </Nav>
 
           <Nav className="align-items-center">
             {(loading || !session) ? 
