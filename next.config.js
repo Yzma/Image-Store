@@ -1,12 +1,11 @@
-const withImages = require("next-images");
 const { createSecureHeaders } = require("next-secure-headers");
 
-module.exports = withImages({
+module.exports = {
     poweredByHeader: false,
-    future: {
-        webpack5: true,
+    images: {
+        domains: ['lh3.googleusercontent.com'],
     },
     async headers() {
         return [{ source: "/(.*)", headers: createSecureHeaders() }];
     },
-});
+};
