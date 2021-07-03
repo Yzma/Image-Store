@@ -1,7 +1,6 @@
-const withImages = require("next-images");
 const { createSecureHeaders } = require("next-secure-headers");
 
-module.exports = withImages({
+module.exports = {
     poweredByHeader: false,
     images: {
         domains: ['lh3.googleusercontent.com'],
@@ -9,4 +8,4 @@ module.exports = withImages({
     async headers() {
         return [{ source: "/(.*)", headers: createSecureHeaders() }];
     },
-});
+};
