@@ -21,7 +21,7 @@ export const Header = (props) => {
       <div className="d-none d-lg-block">
         <Navbar className="px-3" collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-          <Navbar.Brand href="#home">Image-Store</Navbar.Brand>
+          <Navbar.Brand href="/">Image-Store</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
 
@@ -104,7 +104,7 @@ export const Header = (props) => {
         <Navbar className="px-3" collapseOnSelect expand="lg" bg="dark" variant="dark">
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Brand href="#home">Image-Store</Navbar.Brand>
+          <Navbar.Brand href="/">Image-Store</Navbar.Brand>
 
           <Nav>
             {(loading || !session) ?
@@ -147,8 +147,8 @@ export const Header = (props) => {
 
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav>
-              <Nav.Link href="#features">Create Post</Nav.Link>
-              <Nav.Link href="#features">Create Collection</Nav.Link>
+              <Nav.Link href="#">Create Post</Nav.Link>
+              <Nav.Link href="#">Create Collection</Nav.Link>
               <Form className="navbar-search">
                 <Form.Group id="topbarSearch">
                   <InputGroup className="input-group-merge search-bar">
