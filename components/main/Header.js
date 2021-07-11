@@ -38,7 +38,7 @@ export const Header = (props) => {
 
             <Nav>
               {(loading || !session) ?
-                <Button onClick={() => signIn()} variant="outline-dark" className="ms-3">Sign In</Button>
+                <Button onClick={() => signIn()} variant="white" className="ms-3">Sign In</Button>
                 :
                 <>
                   <Dropdown as={Nav.Item} className="pe-2 align-self-center">
@@ -108,7 +108,7 @@ export const Header = (props) => {
 
           <Nav>
             {(loading || !session) ?
-              <Button onClick={() => signIn()} variant="outline-dark" className="ms-3">Sign In</Button>
+              <Button onClick={() => signIn()} variant="white" className="ms-3">Sign In</Button>
               :
               <>
                 <Dropdown as={Nav.Item}>
